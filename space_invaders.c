@@ -2,6 +2,8 @@
 #include "include/player_obj.h"
 #include <stdlib.h>
 
+
+
 int main(void) {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -29,29 +31,37 @@ int main(void) {
 	bool running = true;
 	SDL_Event event;
 
-	Objects *game_objects = (Objects*) malloc(sizeof(Objects));
 	Objects *player_obj   = (Objects*) malloc(sizeof(Objects));
+	Objects *game_objects = player_obj;
 
-	game_objects = player_obj;
+
 
 	initialize_player_state(render, player_obj);
 
 	while (running){
 		SDL_SetRenderDrawColor(render, 80, 243, 144, 255);
+		SDL_RenderClear(render);
+
 		while(SDL_PollEvent(&event) != 0){
 			if (event.type == SDL_QUIT) {
 				running = false;
 			}
 		}
-		SDL_RenderClear(render);
 
+		handle_keyboard_input(player_obj);
 		render_player_current_state(render, player_obj);
+		
+
+
+		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
 	}
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(render);
 	SDL_Quit();
+
+	free(game_objects);
 
 
 	return 0;
