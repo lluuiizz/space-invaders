@@ -13,5 +13,8 @@
 #define FRAMES 30
 #define TICKS_PER_FRAME 1000/FRAMES
 
+
+void render_game_objects (SDL_Renderer *render, Objects *game_objects, Objects *player);
+
 #endif
 

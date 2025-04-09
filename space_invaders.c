@@ -2,8 +2,6 @@
 #include "include/player_obj.h"
 #include <stdlib.h>
 
-
-
 int main(void) {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -32,7 +30,7 @@ int main(void) {
 	SDL_Event event;
 
 	Objects *player_obj   = (Objects*) malloc(sizeof(Objects));
-	Objects *game_objects = player_obj;
+
 
 
 
@@ -48,11 +46,8 @@ int main(void) {
 			}
 		}
 
-		handle_keyboard_input(player_obj);
 		render_player_current_state(render, player_obj);
 		
-
-
 		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
 	}
@@ -61,11 +56,24 @@ int main(void) {
 	SDL_DestroyRenderer(render);
 	SDL_Quit();
 
-	free(game_objects);
+	free(player_obj);
 
 
 	return 0;
 
+}
 
 
+void render_game_objects (SDL_Renderer *render, Objects *game_objects, Objects *player){
+	render_player_current_state(render, player);
+
+	/*
+	Objects *bullet = player->prox;
+
+
+	if (bullet != NULL && bullet->state == 1){
+		SDL_Rect crop_sprite = {0, 0, PLAYER_WIDTH, PLAYER_HEIGHT};
+		SDL_RenderCopy(render, bullet->sprite, &crop_sprite, &bullet->collision);
+	}
+	*/
 }
