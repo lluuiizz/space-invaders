@@ -10,6 +10,8 @@
 
 #define RIGHT_MOVEMENT SDL_SCANCODE_D
 #define LEFT_MOVEMENT SDL_SCANCODE_A
+#define ATTACK		  SDL_SCANCODE_SPACE
+
 
 void initialize_player_state(SDL_Renderer* render, Objects* player_obj);
 void handle_keyboard_input  (Objects* player_obj);;
@@ -17,6 +19,5 @@ void actualize_player_current_state(Objects* player_obj);
 void render_player_current_state(SDL_Renderer* render, Objects* player_obj);
 
 static int move_speed;
-
 
 #endif
