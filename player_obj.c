@@ -3,7 +3,7 @@
 
 
 
-void initialize_player_state(SDL_Renderer* render, Objects* player_obj) {
+void initialize_player_state(SDL_Renderer* render, Object* player_obj) {
 
 	SDL_Surface *player_surface = IMG_Load("./assets/player.png");
 	SDL_SetSurfaceColorMod(player_surface, 0, 0, 0);
@@ -45,13 +45,13 @@ bool will_collid_with_wall(int player_position, int movement_direction) {
 		return player_position - 10 < 0;
 }
 
-void change_player_position(Objects *player_obj, int movement_direction){
+void change_player_position(Object *player_obj, int movement_direction){
 	if (movement_direction == RIGHT_MOVEMENT)
 		player_obj->pos_x += (float )move_speed / FRAMES;
 	else 
 		player_obj->pos_x -= (float )move_speed / FRAMES;
 }
-void handle_keyboard_input  (Objects* player_obj) {
+void handle_keyboard_input  (Object* player_obj) {
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
 	if (keystate[RIGHT_MOVEMENT] && will_collid_with_wall(player_obj->pos_x, RIGHT_MOVEMENT) == false ) 
@@ -67,7 +67,7 @@ void handle_keyboard_input  (Objects* player_obj) {
 		//player_obj->prox->state = 0;
 
 }
-void actualize_player_current_state(Objects* player_obj) {
+void actualize_player_current_state(Object* player_obj) {
 	player_obj->collision.x = player_obj->pos_x;
 	player_obj->collision.y = player_obj->pos_y;
 
@@ -79,10 +79,10 @@ void actualize_player_current_state(Objects* player_obj) {
 	player_obj->prox->collision.y = player_obj->prox->pos_y; 
 	*/
 }
-void render_player_current_state(SDL_Renderer* render, Objects* player_obj) {
+void render_player_current_state(SDL_Renderer* render, Object* player_obj) {
 	handle_keyboard_input(player_obj);
 	actualize_player_current_state(player_obj);
 	SDL_Rect crop_sprite = {0, 0, PLAYER_WIDTH, PLAYER_HEIGHT};
-	SDL_RenderCopy(render, player_obj->sprite, &crop_sprite, &player_obj->collision);
+	SDL_RenderCopy(render, player_obj->sprite, &crop_sprite, &(player_obj)->collision);
 }
 
