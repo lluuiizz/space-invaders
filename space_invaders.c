@@ -29,12 +29,13 @@ int main(void) {
 	bool running = true;
 	SDL_Event event;
 
-	Objects *player_obj   = (Objects*) malloc(sizeof(Objects));
+	Object player;
+	Objects enemys = (Objects) malloc(sizeof(Object) * 10);
 
 
 
 
-	initialize_player_state(render, player_obj);
+	initialize_player_state(render, &player);
 
 	while (running){
 		SDL_SetRenderDrawColor(render, 80, 243, 144, 255);
@@ -46,7 +47,7 @@ int main(void) {
 			}
 		}
 
-		render_player_current_state(render, player_obj);
+		render_game_objects(render, enemys, &player);
 		
 		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
@@ -56,7 +57,6 @@ int main(void) {
 	SDL_DestroyRenderer(render);
 	SDL_Quit();
 
-	free(player_obj);
 
 
 	return 0;
@@ -64,9 +64,8 @@ int main(void) {
 }
 
 
-void render_game_objects (SDL_Renderer *render, Objects *game_objects, Objects *player){
+void render_game_objects (SDL_Renderer *render, Objects enemys, Object *player){
 	render_player_current_state(render, player);
-
 	/*
 	Objects *bullet = player->prox;
 
