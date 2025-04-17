@@ -1,17 +1,26 @@
-all: space_invaders.o player.o bullet.o 
-	@gcc *.o -o space_invaders -Werror -Wall -Wextra -pedantic -lSDL2 -lSDL2_image -lSDL2_ttf
-	@rm *.o 
+CC = gcc
+CFLAGS = -Werror -Wall -Wextra -pedantic
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
+TARGET = space_invaders
+SRCS = space_invaders.c player.c bullet.c
+OBJS = $(SRCS:.c=.o)
 
-run: space_invaders.o player.o bullet.o 
-	@gcc *.o -o space_invaders -Werror -Wall -Wextra -pedantic -lSDL2 -lSDL2_image -lSDL2_ttf
-	@./space_invaders
-	@rm *.o 
+all: $(TARGET)
 
-space_invaders.o:
-	@gcc -c space_invaders.c
-player.o: 
-	@gcc -c player.c
-bullet.o:
-	@gcc -c bullet.c
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
+space_invaders.o: space_invaders.c 
+player.o: player.c 
+bullet.o: bullet.c 
+
+run: $(TARGET)
+	./$(TARGET)
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: all clean run

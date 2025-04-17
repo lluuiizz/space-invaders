@@ -4,24 +4,23 @@
 #include <SDL2/SDL.h>
 
 typedef enum {
-	Player,
-	Enemy,
-	Bullet,
-
-} Object_type;
-#define NUM_OF_DIFFERENT_OBJECTS 3
+	PLAYER,
+	ENEMY,
+	BULLET,
+	N_OBJECTS_TYPES,
+} object_type_t;
 
 typedef struct {
-	Object_type  obj_type;
 	SDL_Texture* sprite;
 	float		 pos_x, pos_y;
 	SDL_Rect	 collision;	//dst_rect:  pos_x pos_y, width_height
 	
-} Object;
-
-typedef Object* Objects;
+} object_t;
 
 
+
+typedef struct bullet_list bullet_list_t;
+typedef struct player player_t;
 
 
 #endif

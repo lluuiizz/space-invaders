@@ -4,19 +4,18 @@
 
 
 
-void initialize_player_state(SDL_Renderer* render, Object* player_obj) {
+void initialize_player_state(SDL_Renderer* render, game_state_t* gs) {
 
 	SDL_Surface *player_surface = IMG_Load("./assets/player.png");
 	SDL_SetSurfaceColorMod(player_surface, 0, 0, 0);
-	player_obj->obj_type = Player;
-	player_obj->sprite = SDL_CreateTextureFromSurface(render, player_surface);
+	gs[PLAYER].player->sprite = SDL_CreateTextureFromSurface(render, player_surface);
 	SDL_FreeSurface(player_surface);
-	player_obj->pos_x = ((float)WIDTH/2) - PLAYER_WIDTH;
-	player_obj->pos_y = HEIGHT - PLAYER_HEIGHT;
-	player_obj->collision.x = player_obj->pos_x; 
-	player_obj->collision.y = player_obj->pos_y; 
-	player_obj->collision.w = PLAYER_WIDTH; 
-	player_obj->collision.h = PLAYER_HEIGHT;
+	gs[PLAYER].player->pos_x = ((float)WIDTH/2) - PLAYER_WIDTH;
+	gs[PLAYER].player->pos_y = HEIGHT - PLAYER_HEIGHT;
+	gs[PLAYER].player->collision.x = gs[PLAYER].player->pos_x; 
+	gs[PLAYER].player->collision.y = gs[PLAYER].player->pos_y; 
+	gs[PLAYER].player->collision.w = PLAYER_WIDTH; 
+	gs[PLAYER].player->collision.h = PLAYER_HEIGHT;
 
 
 
@@ -31,35 +30,35 @@ bool will_collid_with_wall(int player_position, int movement_direction) {
 		return player_position - 10 < 0;
 }
 
-void change_player_position(Object *player_obj, int movement_direction){
+void change_player_position(game_state_t *gs, int movement_direction){
 	if (movement_direction == RIGHT_MOVEMENT)
-		player_obj->pos_x += (float )move_speed / FRAMES;
+		gs[PLAYER].player->pos_x += (float )move_speed / FRAMES;
 	else 
-		player_obj->pos_x -= (float )move_speed / FRAMES;
+		gs[PLAYER].player->pos_x -= (float )move_speed / FRAMES;
 }
-void handle_keyboard_input  (SDL_Renderer *render, Bullet_list *bullet_list, Object* player_obj) {
+void handle_keyboard_input  (SDL_Renderer *render, game_state_t *gs) {
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
-	if (keystate[RIGHT_MOVEMENT] && will_collid_with_wall(player_obj->pos_x, RIGHT_MOVEMENT) == false ) 
-		change_player_position(player_obj, RIGHT_MOVEMENT);
+	if (keystate[RIGHT_MOVEMENT] && will_collid_with_wall(gs[PLAYER].player->pos_x, RIGHT_MOVEMENT) == false ) 
+		change_player_position(gs, RIGHT_MOVEMENT);
 
-	else if (keystate[LEFT_MOVEMENT] && will_collid_with_wall(player_obj->pos_x, LEFT_MOVEMENT) == false) 
-		change_player_position(player_obj, LEFT_MOVEMENT);
+	else if (keystate[LEFT_MOVEMENT] && will_collid_with_wall(gs[PLAYER].player->pos_x, LEFT_MOVEMENT) == false) 
+		change_player_position(gs, LEFT_MOVEMENT);
 
 	if (keystate[ATTACK]) 
-		create_bullet(render, bullet_list, *player_obj);
+		create_bullet(render, gs);
 	else 
 		printf("Fazendo nada!!!\n");
-		//player_obj->prox->state = 0;
+		//gs[PLAYER].player->prox->state = 0;
 
 }
-void actualize_player_current_state(SDL_Renderer* render, Bullet_list *bullet_list, Object* player_obj) {
-	handle_keyboard_input(render, bullet_list, player_obj);
-	player_obj->collision.x = player_obj->pos_x;
-	player_obj->collision.y = player_obj->pos_y;
+void actualize_player_current_state(SDL_Renderer* render, game_state_t* gs) {
+	handle_keyboard_input(render, gs);
+	gs[PLAYER].player->collision.x = gs[PLAYER].player->pos_x;
+	gs[PLAYER].player->collision.y = gs[PLAYER].player->pos_y;
 }
-void render_player_current_state(SDL_Renderer* render, Object* player_obj) {
+void render_player_current_state(SDL_Renderer* render, game_state_t* gs) {
 	SDL_Rect crop_sprite = {0, 0, PLAYER_WIDTH, PLAYER_HEIGHT};
-	SDL_RenderCopy(render, player_obj->sprite, &crop_sprite, &(player_obj)->collision);
+	SDL_RenderCopy(render, gs[PLAYER].player->sprite, &crop_sprite, &(gs[PLAYER].player)->collision);
 }
 

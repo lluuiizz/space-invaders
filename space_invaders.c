@@ -2,6 +2,7 @@
 #include "include/space_invaders.h"
 #include "include/player.h"
 #include "include/objects.h"
+#include "include/game_state.h"
 #include <stdlib.h>
 
 int main(void) {
@@ -30,16 +31,17 @@ int main(void) {
 	bool running = true;
 	SDL_Event event;
 
-	Object player;
-	Objects enemys = (Objects) malloc(sizeof(Object) * 10);
-	Objects *all_objects = (Objects*) malloc(sizeof(Object) * 2); // Esse tipo de vetor será utilizado para renderizar todos 
-	Bullet_list *bullet_list = initialize_bullet_list();
-	all_objects[Player] = &player;														      // Os elementos diferentes do jogo. 
-	all_objects[Enemy] = enemys;																						   
+	object_t player;
+	bullet_list_t *bullet_list = initialize_bullet_list();
+
+	game_state_t game_state[N_OBJECTS_TYPES];
+	game_state[PLAYER].player = &player;
+	game_state[BULLET].bullet_list = bullet_list;
 
 
+	printf("The value of Bullet in the Object type enum is %d", BULLET);
 
-	initialize_player_state(render, &player);
+	initialize_player_state(render, game_state);
 
 
 	while (running){
@@ -52,8 +54,8 @@ int main(void) {
 			}
 		}
 
-		actualize_player_current_state(render, bullet_list, &player);
-		render_game_objects(render, bullet_list, all_objects);
+		actualize_player_current_state(render, game_state);
+		render_game_objects(render,  game_state);
 		
 		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
@@ -71,23 +73,23 @@ int main(void) {
 }
 
 
-void render_game_objects (SDL_Renderer *render, Bullet_list *bullet_list, Objects* all_game_objects){
-	Object_type different_objects[] = {Player, Enemy, Bullet};
+void render_game_objects (SDL_Renderer *render,  game_state_t* game_state){
+	object_type_t different_objects[] = {PLAYER, ENEMY, BULLET};
 	int each = 0;
 	do{
 
-		if (different_objects[each] == Player){
-			render_player_current_state(render, all_game_objects[Player]);
+		if (different_objects[each] == PLAYER){
+			render_player_current_state(render, game_state);
 		}
-		else if (different_objects[each] == Enemy){
+		else if (different_objects[each] == ENEMY){
 			SDL_Log("Here we send the enemy to render\n");
 		}
-		else if (different_objects[each] == Bullet){
+		else if (different_objects[each] == BULLET){
 			SDL_Log("Here we send the BULLETS to render\n");
-			Bullet_obj *aux = bullet_list->head;
+			bullet_obj_t *aux = game_state[BULLET].bullet_list->head;
 
-			for (int i = 0; i < bullet_list->nbullets; i++){
-				SDL_Log("Rendering bullet %d out of %d\n",i+1, bullet_list->nbullets);
+			for (int i = 0; i < game_state[BULLET].bullet_list->nbullets; i++){
+				SDL_Log("Rendering bullet %d out of %d\n",i+1, game_state[BULLET].bullet_list->nbullets);
 				SDL_Rect crop_sprite = {0, 0, BULLET_W, BULLET_H};
 				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).collision );
 				aux = aux->prox;
@@ -96,6 +98,6 @@ void render_game_objects (SDL_Renderer *render, Bullet_list *bullet_list, Object
 		}
 
 		each++;
-	} while (each != NUM_OF_DIFFERENT_OBJECTS);
+	} while (each != N_OBJECTS_TYPES);
 
 }
