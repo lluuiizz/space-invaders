@@ -3,9 +3,6 @@
 
 #include "objects.h"
 
-
-#define N_GAME_ENTITYS 3
-
 typedef struct game_state 
 {
 	union 

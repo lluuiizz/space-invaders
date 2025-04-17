@@ -4,7 +4,8 @@
 #include <stdlib.h>
 
 
-bullet_list_t *initialize_bullet_list(){
+bullet_list_t *initialize_bullet_list()
+{
 	bullet_list_t *new_bullet = (bullet_list_t*) malloc(sizeof(bullet_list_t));
 
 	new_bullet->head = NULL;
@@ -16,11 +17,9 @@ bullet_list_t *initialize_bullet_list(){
 	return new_bullet;
 }
 
-SDL_Rect get_player_rect(object_t player) {
-	return player.box;
-}
 
-void set_bullet_propertys(SDL_Renderer *render, bullet_obj_t *bullet, SDL_Rect player_info){
+void set_bullet_propertys(SDL_Renderer *render, bullet_obj_t *bullet, SDL_Rect player_info)
+{
 	bullet->render_info.pos_x = player_info.x + (((float)player_info.w / 2)) - ((float)BULLET_W/2);
 	bullet->render_info.pos_y = player_info.y - (((float)player_info.h / 2)) - ((float)BULLET_H/2);
 
@@ -36,10 +35,12 @@ void set_bullet_propertys(SDL_Renderer *render, bullet_obj_t *bullet, SDL_Rect p
 	SDL_FreeSurface(bullet_surface);
 	
 }
-void create_bullet(SDL_Renderer *render, game_state_t *gs){
+void create_bullet(SDL_Renderer *render, game_state_t *gs)
+{
 	SDL_Log("Estamos Criando a nova bala!!\n");
 
-	if (gs[BULLET].bullet_list == NULL)
+	bullet_list_t *bullet_list = gs[BULLET].bullet_list;
+	if (bullet_list == NULL)
 		SDL_Log("Erro ao criar a lista de balas!\n");
 
 
@@ -50,15 +51,47 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs){
 
 	set_bullet_propertys(render, newer, gs[PLAYER].player->render_info->box);
 
-	if (gs[BULLET].bullet_list->head == NULL)
-		gs[BULLET].bullet_list->tail = newer;
+	if (bullet_list->head == NULL)
+		bullet_list->tail = newer;
 
 	newer->prox = gs[BULLET].bullet_list->head;
-	gs[BULLET].bullet_list->head = newer;
+	bullet_list->head = newer;
 
-	gs[BULLET].bullet_list->nbullets++;
-	gs[BULLET].bullet_list->countdown = 100;
+	bullet_list->nbullets++;
+	bullet_list->countdown = 100;
 
 }
+
+bool will_bullet_collide(bullet_obj_t *bullet)
+{
+	if (bullet->render_info.pos_y - 1 < 0)
+		return true;
+
+	return false;
+}
+
+void update_bullets(game_state_t *gs)
+{
+	bullet_list_t *bullet_list = gs[BULLET].bullet_list;
+
+	bullet_obj_t *aux = bullet_list->head;
+
+
+	while (aux != NULL)
+	{
+		if (will_bullet_collide(aux) == false)
+		{
+			aux->render_info.pos_y -= (float)BULLET_MOVE_SPEED / FRAMES;
+			aux->render_info.box.y = aux->render_info.pos_y;
+		}
+
+		aux = aux->prox;
+	}
+
+}
+
+
+
+
 
 

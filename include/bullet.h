@@ -10,14 +10,16 @@
 #define BULLET_W 32
 #define BULLET_H 32
 
-typedef struct bullet_obj {
+typedef struct bullet_obj
+{
 	object_t render_info;
 
 	struct bullet_obj *prox;
 
 } bullet_obj_t;
 
-struct bullet_list {
+struct bullet_list
+{
 	bullet_obj_t *head;
 	bullet_obj_t *tail;
 
@@ -28,4 +30,5 @@ struct bullet_list {
 
 bullet_list_t *initialize_bullet_list();
 void create_bullet(SDL_Renderer *render, game_state_t *);
+void update_bullets(game_state_t *gs);
 #endif 
