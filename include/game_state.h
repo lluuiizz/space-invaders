@@ -6,10 +6,12 @@
 
 #define N_GAME_ENTITYS 3
 
-typedef struct game_state {
-	union {
+typedef struct game_state 
+{
+	union 
+	{
 		bullet_list_t *bullet_list;
-		object_t *player;
+		player_t *player;
 	};
 
 } game_state_t;

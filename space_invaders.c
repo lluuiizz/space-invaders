@@ -31,7 +31,7 @@ int main(void) {
 	bool running = true;
 	SDL_Event event;
 
-	object_t player;
+	player_t player;
 	bullet_list_t *bullet_list = initialize_bullet_list();
 
 	game_state_t game_state[N_OBJECTS_TYPES];
@@ -91,7 +91,7 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* game_state){
 			for (int i = 0; i < game_state[BULLET].bullet_list->nbullets; i++){
 				SDL_Log("Rendering bullet %d out of %d\n",i+1, game_state[BULLET].bullet_list->nbullets);
 				SDL_Rect crop_sprite = {0, 0, BULLET_W, BULLET_H};
-				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).collision );
+				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 				aux = aux->prox;
 			}
 			
