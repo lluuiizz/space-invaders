@@ -1,4 +1,5 @@
 #include "include/bullet.h"
+#include "include/player.h"
 #include "include/space_invaders.h"
 #include <stdlib.h>
 
@@ -16,17 +17,17 @@ bullet_list_t *initialize_bullet_list(){
 }
 
 SDL_Rect get_player_rect(object_t player) {
-	return player.collision;
+	return player.box;
 }
 
 void set_bullet_propertys(SDL_Renderer *render, bullet_obj_t *bullet, SDL_Rect player_info){
 	bullet->render_info.pos_x = player_info.x + (((float)player_info.w / 2)) - ((float)BULLET_W/2);
 	bullet->render_info.pos_y = player_info.y - (((float)player_info.h / 2)) - ((float)BULLET_H/2);
 
-	bullet->render_info.collision.w = BULLET_W;
-	bullet->render_info.collision.h = BULLET_H;
-	bullet->render_info.collision.x = bullet->render_info.pos_x;
-	bullet->render_info.collision.y = bullet->render_info.pos_y;
+	bullet->render_info.box.w = BULLET_W;
+	bullet->render_info.box.h = BULLET_H;
+	bullet->render_info.box.x = bullet->render_info.pos_x;
+	bullet->render_info.box.y = bullet->render_info.pos_y;
 	SDL_Log("Conseguimos setar a posicao e o tipo!!!\n");
 
 	// SPRITE Creation
@@ -43,11 +44,11 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs){
 
 
 	SDL_Delay(TICKS_PER_FRAME);
-	printf("Player Info: %d %d %d %d\n", gs[PLAYER].player->collision.w, gs[PLAYER].player->collision.h, gs[PLAYER].player->collision.x, gs[PLAYER].player->collision.y);
 
 
 	bullet_obj_t *newer = (bullet_obj_t*) malloc(sizeof(bullet_obj_t));
-	set_bullet_propertys(render, newer, gs[PLAYER].player->collision);
+
+	set_bullet_propertys(render, newer, gs[PLAYER].player->render_info->box);
 
 	if (gs[BULLET].bullet_list->head == NULL)
 		gs[BULLET].bullet_list->tail = newer;

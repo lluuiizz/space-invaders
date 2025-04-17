@@ -3,17 +3,19 @@
 
 #include <SDL2/SDL.h>
 
-typedef enum {
+typedef enum 
+{
 	PLAYER,
 	ENEMY,
 	BULLET,
 	N_OBJECTS_TYPES,
 } object_type_t;
 
-typedef struct {
-	SDL_Texture* sprite;
+typedef struct 
+{
+	SDL_Texture* sprite      ;
 	float		 pos_x, pos_y;
-	SDL_Rect	 collision;	//dst_rect:  pos_x pos_y, width_height
+	SDL_Rect	 box;	
 	
 } object_t;
 
