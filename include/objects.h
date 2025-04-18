@@ -21,8 +21,9 @@ typedef struct
 
 
 
-typedef struct bullet_list bullet_list_t;
 typedef struct player player_t;
+typedef struct enemy_list enemy_list_t;
+typedef struct bullet_list bullet_list_t;
 
 
 #endif
