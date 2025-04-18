@@ -67,6 +67,10 @@ int main(void)
 		SDL_RenderPresent(render);
 	}
 
+	if (bullet_list->head == NULL && bullet_list->tail == NULL)
+		printf("Finalizamos com HEAD E TAIL - NULL\n");
+	free(bullet_list);
+	free(player.render_info);
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(render);
 	SDL_Quit();
@@ -100,7 +104,7 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 			for (int i = 0; i < gs[BULLET].bullet_list->nbullets; i++)
 			{
 				SDL_Log("Rendering bullet %d out of %d\n",i+1, gs[BULLET].bullet_list->nbullets);
-				SDL_Rect crop_sprite = {0, 0, BULLET_W, BULLET_H};
+				SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
 				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 				aux = aux->prox;
 			}
