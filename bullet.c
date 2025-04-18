@@ -53,9 +53,11 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs)
 
 	if (bullet_list->head == NULL)
 		bullet_list->tail = newer;
-
-	newer->prox = gs[BULLET].bullet_list->head;
+	else
+		bullet_list->head->ant = newer;
+	newer->prox = bullet_list->head;
 	bullet_list->head = newer;
+	bullet_list->head->ant = NULL;
 
 	bullet_list->nbullets++;
 	bullet_list->countdown = 100;
@@ -70,11 +72,43 @@ bool will_bullet_collide(bullet_obj_t *bullet)
 	return false;
 }
 
+void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
+{
+
+	if (bullet_list->head == bullet_list->tail){
+		SDL_Log("Liberando o espaço quando se há UMA BALA\n");
+		bullet_list->head = NULL, bullet_list->tail = NULL;
+		free(bullet);
+	}
+	else if (bullet->ant != NULL && bullet->prox == NULL)
+	{
+		SDL_Log("Liberando o espaço quando se há UMA BALA ANTERIOR\n");
+		bullet_list->tail = bullet->ant;
+		bullet->ant->prox = NULL;
+		free(bullet);
+	}
+	else if (bullet->ant == NULL && bullet->prox != NULL)
+	{
+		SDL_Log("Liberando o espaço quando se há UMA BALA NA PROXIMA\n");
+		bullet_obj_t *p_bullet = bullet;
+		bullet = bullet->prox;
+		bullet_list->head = bullet;
+		free(p_bullet);
+	}
+	else if (bullet->ant != NULL && bullet->prox != NULL){	
+		SDL_Log("Liberando o espaço quando se há UMA BALA ATRAS E NA FRENTE\n");
+		bullet->ant->prox = bullet->prox;
+		free(bullet);
+	}
+
+
+}
+
 void update_bullets(game_state_t *gs)
 {
 	bullet_list_t *bullet_list = gs[BULLET].bullet_list;
 
-	bullet_obj_t *aux = bullet_list->head;
+	bullet_obj_t *aux = bullet_list->tail;
 
 
 	while (aux != NULL)
@@ -83,11 +117,17 @@ void update_bullets(game_state_t *gs)
 		{
 			aux->render_info.pos_y -= (float)BULLET_MOVE_SPEED / FRAMES;
 			aux->render_info.box.y = aux->render_info.pos_y;
+			aux = aux->ant;
 		}
-
-		aux = aux->prox;
+		else 
+		{
+			SDL_Log("Vamos destruir uma bala!!!\n");
+			bullet_obj_t *p_aux = aux;
+			aux = aux->ant;
+			destroy_bullet(bullet_list, p_aux);
+			bullet_list->nbullets--;
+		}
 	}
-
 }
 
 

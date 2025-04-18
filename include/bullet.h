@@ -15,6 +15,7 @@ typedef struct bullet_obj
 	object_t render_info;
 
 	struct bullet_obj *prox;
+	struct bullet_obj *ant;
 
 } bullet_obj_t;
 
