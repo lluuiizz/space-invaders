@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Werror -Wall -Wextra -pedantic
 LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
 TARGET = space_invaders
-SRCS = space_invaders.c player.c bullet.c
+SRCS = space_invaders.c player.c bullet.c enemy.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
@@ -16,6 +16,7 @@ $(TARGET): $(OBJS)
 space_invaders.o: space_invaders.c 
 player.o: player.c 
 bullet.o: bullet.c 
+enemy.o: enemy.c
 
 run: $(TARGET)
 	./$(TARGET)
