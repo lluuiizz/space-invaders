@@ -6,7 +6,7 @@
 #include "SDL2/SDL_image.h"
 
 
-#define BULLET_MOVE_SPEED 150
+#define BULLET_MOVE_SPEED 400
 #define BULLET_W 32
 #define BULLET_H 32
 

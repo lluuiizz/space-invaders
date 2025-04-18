@@ -7,8 +7,9 @@ typedef struct game_state
 {
 	union 
 	{
-		bullet_list_t *bullet_list;
 		player_t *player;
+		enemy_grid_t *enemy_grid;
+		bullet_list_t *bullet_list;
 	};
 
 } game_state_t;

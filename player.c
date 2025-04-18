@@ -10,7 +10,6 @@ void initialize_player_state(SDL_Renderer* render, game_state_t* gs)
 
 	gs[PLAYER].player->render_info = (object_t*) malloc(sizeof(object_t));
 	SDL_Surface *player_surface = IMG_Load("./assets/player.png");
-	SDL_SetSurfaceColorMod(player_surface, 0, 0, 0);
 	gs[PLAYER].player->render_info->sprite = SDL_CreateTextureFromSurface(render, player_surface);
 	SDL_FreeSurface(player_surface);
 	gs[PLAYER].player->render_info->pos_x = ((float)WIDTH/2) - PLAYER_WIDTH;

@@ -1,8 +1,9 @@
-#include "include/bullet.h"
 #include "include/space_invaders.h"
-#include "include/player.h"
-#include "include/objects.h"
 #include "include/game_state.h"
+#include "include/objects.h"
+#include "include/player.h"
+#include "include/enemy.h"
+#include "include/bullet.h"
 #include <stdlib.h>
 
 int main(void)
@@ -36,21 +37,24 @@ int main(void)
 	SDL_Event event;
 
 	player_t player;
+	enemy_grid_t enemy_grid; 
 	bullet_list_t *bullet_list = initialize_bullet_list();
 
 	game_state_t gs[N_OBJECTS_TYPES];
 	gs[PLAYER].player = &player;
+	gs[ENEMY].enemy_grid = &enemy_grid;
 	gs[BULLET].bullet_list = bullet_list;
 
 
 	printf("The value of Bullet in the Object type enum is %d", BULLET);
 
 	initialize_player_state(render, gs);
+	create_enemy_grid(render, gs);
 
 
 	while (running)
 	{
-		SDL_SetRenderDrawColor(render, 80, 243, 144, 255);
+		SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
 		SDL_RenderClear(render);
 
 		while(SDL_PollEvent(&event) != 0)
@@ -93,22 +97,32 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 		if (different_objects[each] == PLAYER)
 			render_player_current_state(render, gs);
 
-		else if (different_objects[each] == ENEMY)
-			SDL_Log("Here we send the enemy to render\n");
+		else if (different_objects[each] == ENEMY){
+			enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+			for (int i = 0; i < COLS_OF_ENEMYS; i++){
+				enemy_list_t *list = &(enemy_grid->list[i]);
+				enemy_obj_t *aux = list->head;
+				while (aux != NULL){
+					SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
+					SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
+					aux = aux->prox;
+
+				}
+			}
+		}
 
 		else if (different_objects[each] == BULLET)
 		{
 			SDL_Log("Here we send the BULLETS to render\n");
 			bullet_obj_t *aux = gs[BULLET].bullet_list->head;
 
-			for (int i = 0; i < gs[BULLET].bullet_list->nbullets; i++)
-			{
-				SDL_Log("Rendering bullet %d out of %d\n",i+1, gs[BULLET].bullet_list->nbullets);
+			while (aux != NULL){
 				SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
 				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 				aux = aux->prox;
+
+
 			}
-			
 		}
 
 		each++;

@@ -1,4 +1,5 @@
 #include "include/bullet.h"
+#include "include/enemy.h"
 #include "include/player.h"
 #include "include/space_invaders.h"
 #include <stdlib.h>
@@ -44,7 +45,7 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs)
 		SDL_Log("Erro ao criar a lista de balas!\n");
 
 
-	SDL_Delay(TICKS_PER_FRAME);
+	SDL_Delay(BULLET_MOVE_SPEED/FRAMES);
 
 
 	bullet_obj_t *newer = (bullet_obj_t*) malloc(sizeof(bullet_obj_t));
@@ -64,11 +65,42 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs)
 
 }
 
-bool will_bullet_collide(bullet_obj_t *bullet)
+// Returns true if Collided with the end of the screen or an Enemy, if an enemy is hited the collumn where
+// was hited is assigned to col_collided, if not then remains NULL
+bool will_bullet_collide(game_state_t *gs, bullet_obj_t *bullet )
 {
-	if (bullet->render_info.pos_y - 1 < 0)
+	if (bullet->render_info.pos_y - 1 < 0){
 		return true;
+	}
 
+	
+	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+
+	for (int i = 0; i < COLS_OF_ENEMYS; i++){
+		enemy_list_t *list = &(enemy_grid->list[i]);
+
+		if (list->head != NULL){
+			float bullet_pos_x = bullet->render_info.pos_x;
+			float bullet_pos_y = bullet->render_info.pos_y;
+			float enemy_pos_x  = list->head->render_info.pos_x;
+			float enemy_pos_y  = list->head->render_info.pos_y;
+
+			if ((bullet_pos_x >= enemy_pos_x) && (bullet_pos_x <= (enemy_pos_x+ENEMY_WIDTH)))
+			{
+				if (bullet_pos_y <= (enemy_pos_y + ENEMY_HEIGHT)){
+					destroy_enemy(list);
+					return true;
+				}
+				else 
+					break;
+			}
+		}
+		else {
+			SDL_Log("\n\n\nHEAD DA COLUNA %d ESTA DESPARECIDO!!!\n\n\n", i);
+
+
+		}
+	}
 	return false;
 }
 
@@ -95,9 +127,10 @@ void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
 		bullet_list->head = bullet;
 		free(p_bullet);
 	}
-	else if (bullet->ant != NULL && bullet->prox != NULL){	
-		SDL_Log("Liberando o espaço quando se há UMA BALA ATRAS E NA FRENTE\n");
+	else if (bullet != NULL && bullet->ant != NULL && bullet->prox != NULL){	
+
 		bullet->ant->prox = bullet->prox;
+		bullet->prox->ant = bullet->ant;
 		free(bullet);
 	}
 
@@ -113,7 +146,7 @@ void update_bullets(game_state_t *gs)
 
 	while (aux != NULL)
 	{
-		if (will_bullet_collide(aux) == false)
+		if (will_bullet_collide(gs, aux) == false)
 		{
 			aux->render_info.pos_y -= (float)BULLET_MOVE_SPEED / FRAMES;
 			aux->render_info.box.y = aux->render_info.pos_y;
@@ -121,11 +154,11 @@ void update_bullets(game_state_t *gs)
 		}
 		else 
 		{
-			SDL_Log("Vamos destruir uma bala!!!\n");
 			bullet_obj_t *p_aux = aux;
 			aux = aux->ant;
 			destroy_bullet(bullet_list, p_aux);
 			bullet_list->nbullets--;
+
 		}
 	}
 }
