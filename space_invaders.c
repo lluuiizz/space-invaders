@@ -87,6 +87,12 @@ int main(void)
 }
 
 
+void collision_debug_rect(SDL_Renderer *render, object_t *object){
+
+	SDL_Rect debug_rect  = {.x = object->pos_x, .y = object->pos_y, .w= object->box.w, .h = object->box.h};
+	SDL_SetRenderDrawColor(render, 255, 0, 0, 100);
+	SDL_RenderFillRect(render, &debug_rect);
+}
 void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 {
 	object_type_t different_objects[] = {PLAYER, ENEMY, BULLET};
@@ -94,8 +100,10 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 	do
 	{
 
-		if (different_objects[each] == PLAYER)
+		if (different_objects[each] == PLAYER){
+			collision_debug_rect(render, gs[PLAYER].player->render_info);
 			render_player_current_state(render, gs);
+		}
 
 		else if (different_objects[each] == ENEMY){
 			enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
@@ -103,7 +111,9 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 				enemy_list_t *list = &(enemy_grid->list[i]);
 				enemy_obj_t *aux = list->head;
 				while (aux != NULL){
-					SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = ENEMY_WIDTH,.h =  ENEMY_HEIGHT};
+					aux->which_sprite = (aux->which_sprite == 0) ? 1 : 0;
+					SDL_Rect crop_sprite = {.x = (aux->which_sprite * ENEMY_WIDTH),.y = 0,.w = ENEMY_WIDTH,.h =  ENEMY_HEIGHT};
+					collision_debug_rect(render, &(aux->render_info));
 					SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 					aux = aux->prox;
 				}
@@ -117,6 +127,7 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 
 			while (aux != NULL){
 				SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
+				collision_debug_rect(render, &(aux->render_info));
 				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 				aux = aux->prox;
 			}

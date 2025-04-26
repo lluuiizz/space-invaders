@@ -60,6 +60,8 @@ void set_enemy_propertys(SDL_Renderer *render, enemy_obj_t *enemy, int wich_list
 	enemy->render_info.sprite = SDL_CreateTextureFromSurface(render, enemy_surface);
 	SDL_FreeSurface(enemy_surface);
 
+	enemy->which_sprite = 0;
+
 
 
 	

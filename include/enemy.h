@@ -18,6 +18,7 @@
 typedef struct enemy_obj 
 {
 	object_t render_info;
+	int which_sprite;
 
 	struct enemy_obj *prox;
 
