@@ -7,8 +7,8 @@
 
 
 #define BULLET_MOVE_SPEED 400
-#define BULLET_W 32
-#define BULLET_H 32
+#define BULLET_W 6
+#define BULLET_H 16 
 
 typedef struct bullet_obj
 {

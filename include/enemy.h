@@ -8,12 +8,12 @@
 
 #define ENEMY_MOVE_SPEED 120
 
-#define COLS_OF_ENEMYS 20 
+#define COLS_OF_ENEMYS 15
 #define ROWS_OF_ENEMYS 5
 
 #define ENEMY_WIDTH  32
-#define ENEMY_HEIGHT 32
-#define SPACE_BETWEEN_ENEMYS 0
+#define ENEMY_HEIGHT 26
+#define SPACE_BETWEEN_ENEMYS 12
 
 typedef struct enemy_obj 
 {
