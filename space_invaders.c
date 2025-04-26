@@ -103,10 +103,9 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 				enemy_list_t *list = &(enemy_grid->list[i]);
 				enemy_obj_t *aux = list->head;
 				while (aux != NULL){
-					SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
+					SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = ENEMY_WIDTH,.h =  ENEMY_HEIGHT};
 					SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 					aux = aux->prox;
-
 				}
 			}
 		}
@@ -120,8 +119,6 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 				SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
 				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
 				aux = aux->prox;
-
-
 			}
 		}
 
