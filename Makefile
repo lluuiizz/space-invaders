@@ -14,9 +14,9 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 space_invaders.o: space_invaders.c 
-player.o: player.c 
+player.o: player.c  
 bullet.o: bullet.c 
-enemy.o: enemy.c
+enemy.o: enemy.c   
 
 run: $(TARGET)
 	./$(TARGET)

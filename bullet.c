@@ -75,6 +75,7 @@ bool will_bullet_collide(game_state_t *gs, bullet_obj_t *bullet )
 
 	
 	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	bool collided = false;
 
 	for (int i = 0; i < COLS_OF_ENEMYS; i++){
 		enemy_list_t *list = &(enemy_grid->list[i]);
@@ -85,23 +86,18 @@ bool will_bullet_collide(game_state_t *gs, bullet_obj_t *bullet )
 			float enemy_pos_x  = list->head->render_info.pos_x;
 			float enemy_pos_y  = list->head->render_info.pos_y;
 
-			if ((bullet_pos_x >= enemy_pos_x) && (bullet_pos_x <= (enemy_pos_x+ENEMY_WIDTH)))
-			{
-				if (bullet_pos_y <= (enemy_pos_y + ENEMY_HEIGHT)){
-					destroy_enemy(list);
-					return true;
-				}
-				else 
-					break;
+			bool x_collision = (bullet_pos_x + BULLET_W > enemy_pos_x) && (bullet_pos_x < enemy_pos_x + ENEMY_WIDTH);
+			bool y_collision = (bullet_pos_y + BULLET_H > enemy_pos_y) && 
+                               (bullet_pos_y < enemy_pos_y + ENEMY_HEIGHT);
+
+			if (x_collision && y_collision){
+				destroy_enemy(list);
+				collided = true;
+				break;
 			}
 		}
-		else {
-			SDL_Log("\n\n\nHEAD DA COLUNA %d ESTA DESPARECIDO!!!\n\n\n", i);
-
-
-		}
 	}
-	return false;
+	return collided;
 }
 
 void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
@@ -131,6 +127,8 @@ void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
 
 		bullet->ant->prox = bullet->prox;
 		bullet->prox->ant = bullet->ant;
+		bullet->prox = NULL;
+		bullet->ant  = NULL;
 		free(bullet);
 	}
 

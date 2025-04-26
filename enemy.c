@@ -1,4 +1,6 @@
 #include "include/enemy.h"
+#include "include/space_invaders.h"
+#include <assert.h>
 
 
 void initialize_enemy_list( enemy_list_t *list){
@@ -25,20 +27,27 @@ void create_enemy_grid(SDL_Renderer *render, game_state_t *gs)
 	}
 
 }
+void set_enemy_pos_x(enemy_obj_t *enemy, int wich_list){
+	if (wich_list == 0)
+		enemy->render_info.pos_x = SPACE_BETWEEN_ENEMYS;
+	else if (wich_list == COLS_OF_ENEMYS-1)
+		enemy->render_info.pos_x = WIDTH- 2 *SPACE_BETWEEN_ENEMYS - ENEMY_WIDTH;
+	else
+		enemy->render_info.pos_x = ((wich_list+1)*SPACE_BETWEEN_ENEMYS) + wich_list * ENEMY_WIDTH; 
+
+}
 void set_enemy_propertys(SDL_Renderer *render, enemy_obj_t *enemy, int wich_list)
 {
 	printf("Criando inimigo na coluna %d\n", wich_list);
 
 	if (enemy->prox == NULL)
 	{
-		enemy->render_info.pos_x = wich_list * ENEMY_WIDTH;
-		enemy->render_info.pos_x += SPACE_BETWEEN_ENEMYS;
+		set_enemy_pos_x(enemy, wich_list);
 		enemy->render_info.pos_y = 0;
 	}
 	else
 	{
-		enemy->render_info.pos_x = wich_list * ENEMY_WIDTH;
-		enemy->render_info.pos_x +=	SPACE_BETWEEN_ENEMYS;
+		set_enemy_pos_x(enemy, wich_list);
 		enemy->render_info.pos_y = enemy->prox->render_info.pos_y + ENEMY_HEIGHT + SPACE_BETWEEN_ENEMYS;
 	}
 
@@ -74,19 +83,22 @@ void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list)
 void destroy_enemy(enemy_list_t *list){
 	printf("ESTAMOS DESTRUINDO O INIMIGO!!!\n");
 	enemy_obj_t *to_destroy = list->head;
-	if (list->head->prox == NULL){
-		list->head = NULL;
-	}
-	else {
+	if (list->head == NULL)
+		return;
+	if (list->head->prox != NULL){
 		list->head = list->head->prox;
 	}
+	else {
+		list->head = NULL;
+	}
+
 
 	free(to_destroy);
 	list->nenemys--;
 	printf("CONSEGUIMOS DESTRUIR O INIMIGO!!!\n");
 
-	if (list->head == NULL)
-		printf("\n\nINFO: ALGUM ERRO ACONTECEU AO DESTRUIR O INIMIGO\n\n");
+	assert(to_destroy != NULL);
+	printf("Conseguimos destruir o inimigo!\n");
 
 }
 void update_enemys(game_state_t *gs);
