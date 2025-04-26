@@ -2,6 +2,7 @@
 #include "include/enemy.h"
 #include "include/player.h"
 #include "include/space_invaders.h"
+#include <assert.h>
 #include <stdlib.h>
 
 
@@ -52,8 +53,10 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs)
 
 	set_bullet_propertys(render, newer, gs[PLAYER].player->render_info->box);
 
-	if (bullet_list->head == NULL)
+	if (bullet_list->head == NULL){
 		bullet_list->tail = newer;
+		bullet_list->tail->prox = NULL;
+	}
 	else
 		bullet_list->head->ant = newer;
 	newer->prox = bullet_list->head;
@@ -104,27 +107,25 @@ void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
 {
 
 	if (bullet_list->head == bullet_list->tail){
-		SDL_Log("Liberando o espaço quando se há UMA BALA\n");
+		SDL_Log("DESTRUINDO a BALA quando se há APENAS UMA \n");
 		bullet_list->head = NULL, bullet_list->tail = NULL;
 		free(bullet);
 	}
 	else if (bullet->ant != NULL && bullet->prox == NULL)
 	{
-		SDL_Log("Liberando o espaço quando se há UMA BALA ANTERIOR\n");
+		SDL_Log("DESTRUINDO a BALA quando se há UMA NA ANTERIO\n");
 		bullet_list->tail = bullet->ant;
 		bullet->ant->prox = NULL;
 		free(bullet);
 	}
 	else if (bullet->ant == NULL && bullet->prox != NULL)
 	{
-		SDL_Log("Liberando o espaço quando se há UMA BALA NA PROXIMA\n");
-		bullet_obj_t *p_bullet = bullet;
-		bullet = bullet->prox;
-		bullet_list->head = bullet;
-		free(p_bullet);
+		SDL_Log("DESTRUINDO a BALA quando se há UMA NA PROXIMA\n");
+		bullet_list->head = bullet->prox;
+		free(bullet);
 	}
 	else if (bullet != NULL && bullet->ant != NULL && bullet->prox != NULL){	
-
+		SDL_Log("DESTRUINDO a BALA quando se há uma NA ANTERIOR E PROXIMA\n");
 		bullet->ant->prox = bullet->prox;
 		bullet->prox->ant = bullet->ant;
 		bullet->prox = NULL;
@@ -132,6 +133,7 @@ void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
 		free(bullet);
 	}
 
+	bullet_list->nbullets--;
 
 }
 
@@ -139,7 +141,7 @@ void update_bullets(game_state_t *gs)
 {
 	bullet_list_t *bullet_list = gs[BULLET].bullet_list;
 
-	bullet_obj_t *aux = bullet_list->tail;
+	bullet_obj_t *aux = bullet_list->head;
 
 
 	while (aux != NULL)
@@ -148,14 +150,13 @@ void update_bullets(game_state_t *gs)
 		{
 			aux->render_info.pos_y -= (float)BULLET_MOVE_SPEED / FRAMES;
 			aux->render_info.box.y = aux->render_info.pos_y;
-			aux = aux->ant;
+			aux = aux->prox;
 		}
 		else 
 		{
 			bullet_obj_t *p_aux = aux;
-			aux = aux->ant;
+			aux = aux->prox;
 			destroy_bullet(bullet_list, p_aux);
-			bullet_list->nbullets--;
 
 		}
 	}

@@ -23,5 +23,6 @@ run: $(TARGET)
 
 clean:
 	rm -f $(OBJS) $(TARGET)
-
+val:
+	valgrind --leak-check=yes ./space_invaders
 .PHONY: all clean run
