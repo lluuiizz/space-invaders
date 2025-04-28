@@ -10,12 +10,16 @@
 #define BULLET_W 6
 #define BULLET_H 16 
 
+#define BULLET_PLAYER_COULDOWN 1
+
 typedef struct bullet_obj
 {
 	object_t render_info;
 
 	struct bullet_obj *prox;
 	struct bullet_obj *ant;
+
+
 
 } bullet_obj_t;
 
@@ -25,7 +29,7 @@ struct bullet_list
 	bullet_obj_t *tail;
 
 	int nbullets;
-	int countdown;
+	float couldown;
 };
 
 

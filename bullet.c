@@ -13,7 +13,7 @@ bullet_list_t *initialize_bullet_list()
 	new_bullet->head = NULL;
 	new_bullet->tail = NULL;
 
-	new_bullet->countdown = 0;
+	new_bullet->couldown = 0.0f;
 	new_bullet->nbullets  = 0;
 
 	return new_bullet;
@@ -45,9 +45,8 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs)
 	if (bullet_list == NULL)
 		SDL_Log("Erro ao criar a lista de balas!\n");
 
-
-	SDL_Delay(BULLET_MOVE_SPEED/FRAMES);
-
+	if (bullet_list->couldown > 0)
+		return;
 
 	bullet_obj_t *newer = (bullet_obj_t*) malloc(sizeof(bullet_obj_t));
 
@@ -64,7 +63,7 @@ void create_bullet(SDL_Renderer *render, game_state_t *gs)
 	bullet_list->head->ant = NULL;
 
 	bullet_list->nbullets++;
-	bullet_list->countdown = 100;
+	bullet_list->couldown = BULLET_PLAYER_COULDOWN;
 
 }
 
@@ -140,6 +139,8 @@ void destroy_bullet(bullet_list_t *bullet_list, bullet_obj_t *bullet)
 void update_bullets(game_state_t *gs)
 {
 	bullet_list_t *bullet_list = gs[BULLET].bullet_list;
+
+	bullet_list->couldown -= gs->delta_time;
 
 	bullet_obj_t *aux = bullet_list->head;
 
