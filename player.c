@@ -7,19 +7,21 @@
 
 void initialize_player_state(SDL_Renderer* render, game_state_t* gs)
 {
+	player_t *player = gs[PLAYER].player;
 
-	gs[PLAYER].player->render_info = (object_t*) malloc(sizeof(object_t));
+	player->render_info = (object_t*) malloc(sizeof(object_t));
 	SDL_Surface *player_surface = IMG_Load("./assets/player.png");
-	gs[PLAYER].player->render_info->sprite = SDL_CreateTextureFromSurface(render, player_surface);
+	player->render_info->sprite = SDL_CreateTextureFromSurface(render, player_surface);
 	SDL_FreeSurface(player_surface);
-	gs[PLAYER].player->render_info->pos_x = ((float)WIDTH/2) - PLAYER_WIDTH;
-	gs[PLAYER].player->render_info->pos_y = HEIGHT - PLAYER_HEIGHT;
-	gs[PLAYER].player->render_info->box.x = gs[PLAYER].player->render_info->pos_x; 
-	gs[PLAYER].player->render_info->box.y = gs[PLAYER].player->render_info->pos_y; 
-	gs[PLAYER].player->render_info->box.w = PLAYER_WIDTH; 
-	gs[PLAYER].player->render_info->box.h = PLAYER_HEIGHT;
+	player->render_info->pos_x = ((float)WIDTH/2) - PLAYER_WIDTH;
+	player->render_info->pos_y = HEIGHT - PLAYER_HEIGHT;
+	player->render_info->box.x = player->render_info->pos_x; 
+	player->render_info->box.y = player->render_info->pos_y; 
+	player->render_info->box.w = PLAYER_WIDTH; 
+	player->render_info->box.h = PLAYER_HEIGHT;
 
-	gs[PLAYER].player->move_speed = 150;
+	player->move_speed = 150;
+	player->attacking = false;
 
 
 }
@@ -49,8 +51,10 @@ void handle_keyboard_input  (SDL_Renderer *render, game_state_t *gs)
 	else if (keystate[LEFT_MOVEMENT] && will_collid_with_wall(gs[PLAYER].player->render_info->pos_x, LEFT_MOVEMENT) == false) 
 		change_player_position(gs, LEFT_MOVEMENT);
 
-	if (keystate[ATTACK]) 
+	if (gs[PLAYER].player->attacking) {
 		create_bullet(render, gs);
+		gs[PLAYER].player->attacking = false;
+	}
 	else 
 		printf("Fazendo nada!!!\n");
 		//gs[PLAYER].player->prox->state = 0;

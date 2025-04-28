@@ -2,6 +2,7 @@
 #define __PLAYER_H
 
 #include <SDL2/SDL_image.h>
+#include <stdbool.h>
 #include "objects.h"
 #include "game_state.h"
 
@@ -21,6 +22,7 @@ void render_player_current_state(SDL_Renderer* render, game_state_t *);
 struct player 
 {
 	object_t *render_info;
+	bool attacking;
 	int move_speed;
 };
 
