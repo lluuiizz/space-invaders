@@ -6,6 +6,7 @@ SRCS = space_invaders.c player.c bullet.c enemy.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
+	rm -rf *.o
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
@@ -20,6 +21,7 @@ enemy.o: enemy.c
 
 run: $(TARGET)
 	./$(TARGET)
+	rm -rf *.o
 
 clean:
 	rm -f $(OBJS) $(TARGET)
