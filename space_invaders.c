@@ -52,8 +52,15 @@ int main(void)
 	create_enemy_grid(render, gs);
 
 
+	Uint32 last_time = SDL_GetTicks();
+
 	while (running)
 	{
+		// Actualize delta time
+		Uint32 now = SDL_GetTicks();
+		gs->delta_time = (now - last_time) / 1000.0f;
+		last_time = now;
+
 		SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
 		SDL_RenderClear(render);
 
