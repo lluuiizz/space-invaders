@@ -1,12 +1,11 @@
 CC = gcc
 CFLAGS = -Werror -Wall -Wextra -pedantic
 LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
-TARGET = space_invaders
+TARGET = space_invaders.o
 SRCS = space_invaders.c player.c bullet.c enemy.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
-	rm -rf *.o
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
