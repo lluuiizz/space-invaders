@@ -37,9 +37,9 @@ bool will_collid_with_wall(int player_position, int movement_direction)
 void change_player_position(game_state_t *gs, int movement_direction)
 {
 	if (movement_direction == RIGHT_MOVEMENT)
-		gs[PLAYER].player->render_info->pos_x += (float )gs[PLAYER].player->move_speed / FRAMES;
+		gs[PLAYER].player->render_info->pos_x += (gs[PLAYER].player->move_speed * gs->delta_time);
 	else 
-		gs[PLAYER].player->render_info->pos_x -= (float )gs[PLAYER].player->move_speed / FRAMES;
+		gs[PLAYER].player->render_info->pos_x -= (gs[PLAYER].player->move_speed * gs->delta_time);
 }
 void handle_keyboard_input  (SDL_Renderer *render, game_state_t *gs)
 {
