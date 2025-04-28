@@ -11,7 +11,7 @@
 
 #define RIGHT_MOVEMENT SDL_SCANCODE_D
 #define LEFT_MOVEMENT SDL_SCANCODE_A
-#define ATTACK		  SDL_SCANCODE_SPACE
+#define ATTACK		  SDLK_SPACE
 
 
 void initialize_player_state(SDL_Renderer* render, game_state_t *);
