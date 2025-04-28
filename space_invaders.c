@@ -78,6 +78,7 @@ int main(void)
 
 		actualize_player_current_state(render, gs);
 		update_bullets(gs);
+		update_enemys(gs);
 		render_game_objects(render,  gs);
 		
 		SDL_Delay(TICKS_PER_FRAME);
@@ -124,10 +125,15 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 				enemy_list_t *list = &(enemy_grid->list[i]);
 				enemy_obj_t *aux = list->head;
 				while (aux != NULL){
-					aux->which_sprite = (aux->which_sprite == 0) ? 1 : 0;
-					SDL_Rect crop_sprite = {.x = (aux->which_sprite * ENEMY_WIDTH),.y = 0,.w = ENEMY_WIDTH,.h =  ENEMY_HEIGHT};
+					animation_t *animation = aux->render_info.animation;
+					animation_t animation_now = animation[aux->animation_playing];
+					SDL_Rect crop_sprite = {.x = animation_now.frame_w * animation_now.frame_now,
+											.y = 0,
+											.w = ENEMY_WIDTH,
+											.h =  ENEMY_HEIGHT};
+
 					collision_debug_rect(render, &(aux->render_info));
-					SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
+					SDL_RenderCopy(render, animation_now.sprite_sheet, &crop_sprite, &(aux->render_info).box);
 					aux = aux->prox;
 				}
 			}
