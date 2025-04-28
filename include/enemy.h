@@ -15,12 +15,20 @@
 #define ENEMY_HEIGHT 26
 #define SPACE_BETWEEN_ENEMYS 12
 
+
+typedef enum {
+	MOVING,
+	DYING,
+	TOTAL_ENEMY_ANIMATIONS,
+} enemy_animations_t;
+
 typedef struct enemy_obj 
 {
 	object_t render_info;
-	int which_sprite;
-
 	struct enemy_obj *prox;
+
+	enemy_animations_t animation_playing;
+	bool alive;
 
 } enemy_obj_t;
 
@@ -42,7 +50,6 @@ struct enemy_grid
 void initialize_enemy_list(enemy_list_t *list);
 void create_enemy_grid(SDL_Renderer *render, game_state_t *gs);
 void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list);
-void destroy_enemy(enemy_list_t *list);
 void update_enemys(game_state_t *gs);
 
 
