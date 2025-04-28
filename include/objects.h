@@ -2,6 +2,7 @@
 #define __OBJECTS_H
 
 #include <SDL2/SDL.h>
+#include "animation.h"
 
 typedef enum 
 {
@@ -13,7 +14,11 @@ typedef enum
 
 typedef struct 
 {
-	SDL_Texture* sprite      ;
+	union {
+		SDL_Texture* sprite;
+		animation_t* animation;
+	};
+
 	float		 pos_x, pos_y;
 	SDL_Rect	 box;	
 	
