@@ -63,7 +63,7 @@ int main(void)
 				running = false;
 			// Check if the Space button was released and then set attack
 			else if (event.type == SDL_KEYUP){
-				if(event.key.keysym.sym == SDLK_SPACE){
+				if(event.key.keysym.sym == ATTACK){
 					gs[PLAYER].player->attacking = true;
 				}
 			}
