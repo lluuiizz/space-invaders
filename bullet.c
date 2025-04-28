@@ -82,7 +82,7 @@ bool will_bullet_collide(game_state_t *gs, bullet_obj_t *bullet )
 	for (int i = 0; i < COLS_OF_ENEMYS; i++){
 		enemy_list_t *list = &(enemy_grid->list[i]);
 
-		if (list->head != NULL){
+		if (list->head != NULL && list->head->animation_playing != DYING){
 			float bullet_pos_x = bullet->render_info.pos_x;
 			float bullet_pos_y = bullet->render_info.pos_y;
 			float enemy_pos_x  = list->head->render_info.pos_x;
@@ -93,7 +93,8 @@ bool will_bullet_collide(game_state_t *gs, bullet_obj_t *bullet )
                                (bullet_pos_y < enemy_pos_y + ENEMY_HEIGHT);
 
 			if (x_collision && y_collision){
-				destroy_enemy(list);
+				SDL_Log("Matamos um inimigo!\n");
+				list->head->animation_playing = DYING;
 				collided = true;
 				break;
 			}
