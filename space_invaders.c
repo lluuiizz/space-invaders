@@ -1,9 +1,5 @@
 #include "include/space_invaders.h"
-#include "include/game_state.h"
-#include "include/objects.h"
-#include "include/player.h"
-#include "include/enemy.h"
-#include "include/bullet.h"
+
 #include <SDL2/SDL_log.h>
 #include <SDL2/SDL_render.h>
 #include <stdlib.h>
@@ -69,7 +65,7 @@ if (window == NULL)
 		{
 			if (event.type == SDL_QUIT)
 				running = false;
-			// Check if the Space button was released and then set attack
+			// Check if the Space button was released and then set flag attack to true
 			else if (event.type == SDL_KEYDOWN){
 				if(event.key.keysym.sym == ATTACK){
 					gs[PLAYER].player->attacking = true;
@@ -77,8 +73,8 @@ if (window == NULL)
 			}
 		}
 		update_player(render ,gs);
-		update_enemys (gs);
 		update_bullets( gs);
+		update_enemys (gs);
 		render_game_objects(render,  gs);
 		SDL_Log("Quantidade de inimigos na TELA: %d", enemy_grid.nenemys );
 		
