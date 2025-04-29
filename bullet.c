@@ -95,6 +95,7 @@ bool will_bullet_collide(game_state_t *gs, bullet_obj_t *bullet )
 			if (x_collision && y_collision){
 				SDL_Log("Matamos um inimigo!\n");
 				list->head->animation_playing = DYING;
+				assert(list->head->animation_playing == DYING);
 				collided = true;
 				break;
 			}
