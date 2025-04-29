@@ -151,7 +151,7 @@ void update_bullets(game_state_t *gs)
 	{
 		if (will_bullet_collide(gs, aux) == false)
 		{
-			aux->render_info.pos_y -= (float)BULLET_MOVE_SPEED / FRAMES;
+			aux->render_info.pos_y -= (float)BULLET_MOVE_SPEED * gs->delta_time;
 			aux->render_info.box.y = aux->render_info.pos_y;
 			aux = aux->prox;
 		}
