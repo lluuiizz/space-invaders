@@ -4,6 +4,8 @@
 #include "include/player.h"
 #include "include/enemy.h"
 #include "include/bullet.h"
+#include <SDL2/SDL_log.h>
+#include <SDL2/SDL_render.h>
 #include <stdlib.h>
 
 int main(void)
@@ -15,8 +17,7 @@ int main(void)
 	}
 
 	SDL_Window* window = SDL_CreateWindow("Space Invaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-
-	if (window == NULL)
+if (window == NULL)
 	{
 		printf("Erro ao criar janela: %s\n", SDL_GetError());
 		SDL_Quit();
@@ -48,7 +49,7 @@ int main(void)
 
 	printf("The value of Bullet in the Object type enum is %d", BULLET);
 
-	initialize_player_state(render, gs);
+	init_player_state(render, gs);
 	create_enemy_grid(render, gs);
 
 
@@ -69,17 +70,17 @@ int main(void)
 			if (event.type == SDL_QUIT)
 				running = false;
 			// Check if the Space button was released and then set attack
-			else if (event.type == SDL_KEYUP){
+			else if (event.type == SDL_KEYDOWN){
 				if(event.key.keysym.sym == ATTACK){
 					gs[PLAYER].player->attacking = true;
 				}
 			}
 		}
-
-		actualize_player_current_state(render, gs);
-		update_bullets(gs);
-		update_enemys(gs);
+		update_player(render ,gs);
+		update_enemys (gs);
+		update_bullets( gs);
 		render_game_objects(render,  gs);
+		SDL_Log("Quantidade de inimigos na TELA: %d", enemy_grid.nenemys );
 		
 		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
