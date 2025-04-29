@@ -13,7 +13,8 @@
 
 #define ENEMY_WIDTH  32
 #define ENEMY_HEIGHT 26
-#define SPACE_BETWEEN_ENEMYS 12
+#define SPACE_BETWEEN_ENEMYS_X 12
+#define SPACE_BETWEEN_ENEMYS_Y 24
 
 
 typedef enum {
@@ -21,6 +22,11 @@ typedef enum {
 	DYING,
 	TOTAL_ENEMY_ANIMATIONS,
 } enemy_animations_t;
+
+typedef enum {
+	MOVING_RIGHT,
+	MOVING_LEFT,
+} movement_direction_t;
 
 typedef struct enemy_obj 
 {
@@ -44,7 +50,8 @@ struct enemy_grid
 {
 	enemy_list_t list[COLS_OF_ENEMYS];
 	int nenemys;
-
+	movement_direction_t move_direction;
+	unsigned int move_speed;
 };
 
 
