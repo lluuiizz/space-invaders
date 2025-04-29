@@ -8,7 +8,7 @@
 
 #define ENEMY_MOVE_SPEED 120
 
-#define COLS_OF_ENEMYS 15
+#define COLS_OF_ENEMYS 14
 #define ROWS_OF_ENEMYS 5
 
 #define ENEMY_WIDTH  32
@@ -36,6 +36,7 @@ struct enemy_list
 {
 
 	enemy_obj_t *head;
+	
 
 };
 
@@ -49,7 +50,7 @@ struct enemy_grid
 
 void init_enemy_list(enemy_list_t *list);
 void create_enemy_grid(SDL_Renderer *render, game_state_t *gs);
-void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list);
+void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_col);
 void update_enemys(game_state_t *gs);
 
 
