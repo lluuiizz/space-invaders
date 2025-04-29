@@ -3,24 +3,25 @@
 #include <assert.h>
 
 
-void initialize_enemy_list( enemy_list_t *list){
+void init_enemy_list( enemy_list_t *list){
 
 	
 	list->head = NULL;
-	list->nenemys = 0;
 
 }
 void create_enemy_grid(SDL_Renderer *render, game_state_t *gs)
 {
 
 	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	enemy_grid->nenemys = 0;
 
 	for (int i = 0; i < COLS_OF_ENEMYS; i++)
 	{
-		initialize_enemy_list(&(enemy_grid->list[i]));
-		for (int j = 0; j < ROWS_OF_ENEMYS; j++)
+		init_enemy_list(&(enemy_grid->list[i]));
+		for (int j = 0; j < ROWS_OF_ENEMYS; j++){
 			create_enemy(render, &(enemy_grid->list[i]), i);
-		printf("\nQuantidade de inimigs na coluna %d : %d", i, enemy_grid->list[i].nenemys);
+			enemy_grid->nenemys++;
+		}
 		if (enemy_grid->list[i].head == NULL)
 			printf("\n\nNENHUM ELEMENTO FOI INSERIDO NA COLUNA\n\n");
 
@@ -115,7 +116,6 @@ void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list)
 	if (list->head == NULL)
 		printf("NAO FOI INSERIDO NENHUM INIMIGO!\n");
 
-	list->nenemys++;
 
 }
 
@@ -198,7 +198,7 @@ void update_enemys(game_state_t *gs){
 			aux = aux->prox;
 			if (tmp->alive == false){
 				destroy_enemy(list, tmp);
-				list->nenemys--;
+				enemy_grid->nenemys--;
 			}
 		}
 	}
