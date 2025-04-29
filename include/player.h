@@ -14,9 +14,9 @@
 #define ATTACK		  SDLK_SPACE
 
 
-void initialize_player_state(SDL_Renderer* render, game_state_t *);
+void init_player_state(SDL_Renderer* render, game_state_t *);
 void handle_keyboard_input  (SDL_Renderer *render, game_state_t *);
-void actualize_player_current_state(SDL_Renderer* render, game_state_t *);
+void update_player(SDL_Renderer* render, game_state_t *);
 void render_player_current_state(SDL_Renderer* render, game_state_t *);
 
 struct player 

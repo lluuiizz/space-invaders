@@ -5,7 +5,7 @@
 
 
 
-void initialize_player_state(SDL_Renderer* render, game_state_t* gs)
+void init_player_state(SDL_Renderer* render, game_state_t* gs)
 {
 	player_t *player = gs[PLAYER].player;
 
@@ -60,7 +60,7 @@ void handle_keyboard_input  (SDL_Renderer *render, game_state_t *gs)
 		//gs[PLAYER].player->prox->state = 0;
 
 }
-void actualize_player_current_state(SDL_Renderer* render, game_state_t* gs)
+void update_player(SDL_Renderer* render, game_state_t* gs)
 {
 	handle_keyboard_input(render, gs);
 	player_t *p_player = gs[PLAYER].player;
