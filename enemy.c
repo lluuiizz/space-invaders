@@ -4,11 +4,9 @@
 
 
 void init_enemy_list( enemy_list_t *list){
-
-	
 	list->head = NULL;
-
 }
+
 void create_enemy_grid(SDL_Renderer *render, game_state_t *gs)
 {
 
@@ -22,19 +20,18 @@ void create_enemy_grid(SDL_Renderer *render, game_state_t *gs)
 			create_enemy(render, &(enemy_grid->list[i]), i);
 			enemy_grid->nenemys++;
 		}
-		if (enemy_grid->list[i].head == NULL)
-			printf("\n\nNENHUM ELEMENTO FOI INSERIDO NA COLUNA\n\n");
+		assert(enemy_grid->list[i].head != NULL);
 
 	}
 
 }
-void set_enemy_pos_x(enemy_obj_t *enemy, int wich_list){
-	if (wich_list == 0)
+void set_enemy_pos_x(enemy_obj_t *enemy, int wich_col){
+	if (wich_col == 0)
 		enemy->render_info.pos_x = SPACE_BETWEEN_ENEMYS;
-	else if (wich_list == COLS_OF_ENEMYS-1)
+	else if (wich_col == COLS_OF_ENEMYS-1)
 		enemy->render_info.pos_x = WIDTH- 2 *SPACE_BETWEEN_ENEMYS - ENEMY_WIDTH;
 	else
-		enemy->render_info.pos_x = ((wich_list+1)*SPACE_BETWEEN_ENEMYS) + wich_list * ENEMY_WIDTH; 
+		enemy->render_info.pos_x = ((wich_col+1)*SPACE_BETWEEN_ENEMYS) + wich_col * ENEMY_WIDTH; 
 
 }
 void set_animation(SDL_Renderer *render, enemy_obj_t *enemy, enemy_animations_t animation_to_set ) {
@@ -113,8 +110,7 @@ void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list)
 	set_enemy_propertys(render, newer, wich_list);
 	list->head = newer;
 
-	if (list->head == NULL)
-		printf("NAO FOI INSERIDO NENHUM INIMIGO!\n");
+	assert(list->head != NULL);
 
 
 }
@@ -124,10 +120,8 @@ void destroy_enemy(enemy_list_t *list, enemy_obj_t *enemy){
 	enemy_obj_t *tmp = enemy;
 
 
-	if (list->head != enemy){
-		SDL_Log("Algum erro aconteceu na execução do jogo!");
-		return;
-	}
+	assert(enemy != NULL);
+	assert(list->head == enemy);
 
 	if (enemy->prox != NULL){
 		enemy = enemy->prox;
@@ -136,7 +130,6 @@ void destroy_enemy(enemy_list_t *list, enemy_obj_t *enemy){
 		enemy = NULL;
 	}
 	list->head = enemy;
-
 
 	free(tmp->render_info.animation);
 	free(tmp);
@@ -172,8 +165,10 @@ void update_animation (game_state_t *gs, enemy_obj_t *enemy) {
 				animation[DYING].frame_now++;
 				animation[DYING].time_since_last = 0;
 
-				if (animation[DYING].frame_now == animation[DYING].total_frames)
+				if (animation[DYING].frame_now == animation[DYING].total_frames){
 					enemy->alive = false;
+
+				}
 			}
 
 
@@ -197,6 +192,7 @@ void update_enemys(game_state_t *gs){
 			enemy_obj_t *tmp = aux;
 			aux = aux->prox;
 			if (tmp->alive == false){
+				SDL_Log("Aqui eu deveria chamar a função que mata o inimigo\n");
 				destroy_enemy(list, tmp);
 				enemy_grid->nenemys--;
 			}
