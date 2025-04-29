@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Werror -Wall -Wextra -pedantic
 LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
-TARGET = space_invaders.o
+TARGET = space_invaders
 SRCS = space_invaders.c player.c bullet.c enemy.c
 OBJS = $(SRCS:.c=.o)
 
