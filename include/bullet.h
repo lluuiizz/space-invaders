@@ -10,7 +10,7 @@
 #define BULLET_W 6
 #define BULLET_H 16 
 
-#define BULLET_PLAYER_COULDOWN 0.5
+#define BULLET_PLAYER_COULDOWN 0.25
 
 typedef struct bullet_obj
 {
