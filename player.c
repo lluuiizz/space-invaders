@@ -52,7 +52,7 @@ void handle_keyboard_input  (SDL_Renderer *render, game_state_t *gs)
 		change_player_position(gs, LEFT_MOVEMENT);
 
 	if (gs[PLAYER].player->attacking) {
-		create_bullet(render, gs);
+		create_bullet(render, gs, gs[PLAYER].player->bullets);
 		gs[PLAYER].player->attacking = false;
 	}
 	else 
