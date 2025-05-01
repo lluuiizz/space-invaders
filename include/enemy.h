@@ -7,6 +7,7 @@
 #include <SDL2/SDL_image.h>
 
 #define ENEMY_MOVE_SPEED 120
+#define BULLET_ENEMY_COULDOWN 1
 
 #define COLS_OF_ENEMYS 14
 #define ROWS_OF_ENEMYS 5
@@ -15,6 +16,7 @@
 #define ENEMY_HEIGHT 26
 #define SPACE_BETWEEN_ENEMYS_X 12
 #define SPACE_BETWEEN_ENEMYS_Y 24
+
 
 
 typedef enum {
@@ -52,6 +54,8 @@ struct enemy_grid
 	int nenemys;
 	movement_direction_t move_direction;
 	unsigned int move_speed;
+
+	bullet_list_t *bullets;
 };
 
 
