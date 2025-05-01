@@ -1,5 +1,7 @@
 #include "include/space_invaders.h"
+#include "include/bullet.h"
 
+#include <assert.h>
 #include <SDL2/SDL_log.h>
 #include <SDL2/SDL_render.h>
 #include <stdlib.h>
@@ -13,40 +15,37 @@ int main(void)
 	}
 
 	SDL_Window* window = SDL_CreateWindow("Space Invaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-if (window == NULL)
-	{
-		printf("Erro ao criar janela: %s\n", SDL_GetError());
-		SDL_Quit();
-		return 1;
-	}
+	assert(window != NULL);
+	SDL_Log("Janela criada com sucesso!\n");
 
 	SDL_Renderer* render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-	if (render == NULL)
-	{
-		printf("Erro ao criar render: %s\n", SDL_GetError());
-		SDL_DestroyWindow(window);
-		SDL_Quit();
-		return 1;
-	}
+	assert(render != NULL);
+	SDL_Log("Render criado com sucesso!\n");
 
 	bool running = true;
 	SDL_Event event;
 
 	player_t player;
-	enemy_grid_t enemy_grid; 
-	bullet_list_t *bullet_list = initialize_bullet_list();
+	enemy_grid_t enemy_grid;
 
 	game_state_t gs[N_OBJECTS_TYPES];
 	gs[PLAYER].player = &player;
 	gs[ENEMY].enemy_grid = &enemy_grid;
-	gs[BULLET].bullet_list = bullet_list;
 
-
-	printf("The value of Bullet in the Object type enum is %d", BULLET);
+	gs->render = render;
 
 	init_player_state(render, gs);
+	player.bullets = initialize_bullet_list(PLAYER);
+	assert(player.bullets != NULL);
+	assert(player.bullets->head == NULL);
+
 	create_enemy_grid(render, gs);
+	enemy_grid.bullets = initialize_bullet_list(ENEMY);
+
+	assert(enemy_grid.bullets != NULL);
+	assert(enemy_grid.bullets->head == NULL);
+
+
 
 
 	Uint32 last_time = SDL_GetTicks();
@@ -73,28 +72,26 @@ if (window == NULL)
 			}
 		}
 		update_player(render ,gs);
-		update_bullets( gs);
+		update_bullets(gs);
 		update_enemys (gs);
 		render_game_objects(render,  gs);
-		SDL_Log("Quantidade de inimigos na TELA: %d", enemy_grid.nenemys );
-		
+
 		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
 	}
 
-	if (bullet_list->head == NULL && bullet_list->tail == NULL)
-		printf("Finalizamos com HEAD E TAIL - NULL\n");
-	free(bullet_list);
+
+	assert(player.bullets->head == NULL && player.bullets->tail == NULL);
+	assert(enemy_grid.bullets->head == NULL && enemy_grid.bullets->tail == NULL);
+
+	free(player.bullets);
+	free(enemy_grid.bullets);
 	free(player.render_info);
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(render);
 	SDL_Quit();
-
-
-
-
 	return 0;
-
 }
 
 
@@ -112,7 +109,6 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 	{
 
 		if (different_objects[each] == PLAYER){
-			collision_debug_rect(render, gs[PLAYER].player->render_info);
 			render_player_current_state(render, gs);
 		}
 
@@ -129,7 +125,6 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 											.w = ENEMY_WIDTH,
 											.h =  ENEMY_HEIGHT};
 
-					collision_debug_rect(render, &(aux->render_info));
 					SDL_RenderCopy(render, animation_now.sprite_sheet, &crop_sprite, &(aux->render_info).box);
 					aux = aux->prox;
 				}
@@ -139,13 +134,20 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 		else if (different_objects[each] == BULLET)
 		{
 			SDL_Log("Here we send the BULLETS to render\n");
-			bullet_obj_t *aux = gs[BULLET].bullet_list->head;
+			bullet_obj_t *player_aux = gs[PLAYER].player->bullets->head;
+			bullet_obj_t *enemy_aux = gs[ENEMY].enemy_grid->bullets->head;
 
-			while (aux != NULL){
-				SDL_Rect crop_sprite = {.x = 0,.y = 0,.w = BULLET_W,.h =  BULLET_H};
-				collision_debug_rect(render, &(aux->render_info));
-				SDL_RenderCopy(render, aux->render_info.sprite, &crop_sprite, &(aux->render_info).box);
-				aux = aux->prox;
+			while (player_aux != NULL){
+				SDL_Log("Estamos tentando renderizar uma bala\n");
+				SDL_Rect sprite_rect = {.x = 0, .y = 0, .w = 8, .h = 16};
+				SDL_RenderCopy(render, player_aux->render_info.sprite, &sprite_rect, &(player_aux->render_info).box);
+				player_aux = player_aux->prox;
+			}
+			while (enemy_aux != NULL){
+				SDL_Log("Estamos tentando renderizar uma bala\n");
+				SDL_Rect sprite_rect = {.x = 0, .y = 0, .w = 8, .h = 16};
+				SDL_RenderCopy(render, enemy_aux->render_info.sprite, &sprite_rect, &(enemy_aux->render_info).box);
+				enemy_aux = enemy_aux->prox;
 			}
 		}
 
