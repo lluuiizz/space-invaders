@@ -1,5 +1,6 @@
 #include "include/enemy.h"
 #include "include/space_invaders.h"
+#include "include/bullet.h"
 #include <assert.h>
 
 
@@ -58,7 +59,6 @@ void set_animation(SDL_Renderer *render, enemy_obj_t *enemy, enemy_animations_t 
 			animation_surface = IMG_Load("./assets/enemy_dying.png");
 			animation[DYING].sprite_sheet= SDL_CreateTextureFromSurface(render, animation_surface);
 			SDL_FreeSurface(animation_surface);
-
 			animation[DYING].frame_w = ENEMY_WIDTH;
 			animation[DYING].frame_h = ENEMY_HEIGHT;
 			animation[DYING].frame_now = -1;
@@ -268,6 +268,12 @@ void update_enemys(game_state_t *gs){
 	int idx = farthest_column_in_direction(move_direction, enemy_grid);
 
 	SDL_Log("O indx do mais longe eh %d\n", idx);
+
+	create_bullet(gs->render, gs, enemy_grid->bullets);
+
+	SDL_Log("O inimigo atirou: %d\n", enemy_grid->bullets->nbullets);
+
+
 
 	switch (move_direction){
 		case MOVING_RIGHT:
