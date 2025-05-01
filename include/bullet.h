@@ -10,7 +10,6 @@
 #define BULLET_W 6
 #define BULLET_H 16 
 
-#define BULLET_PLAYER_COULDOWN 0.25
 
 typedef struct bullet_obj
 {
@@ -18,8 +17,6 @@ typedef struct bullet_obj
 
 	struct bullet_obj *prox;
 	struct bullet_obj *ant;
-
-
 
 } bullet_obj_t;
 
@@ -30,10 +27,12 @@ struct bullet_list
 
 	int nbullets;
 	float couldown;
+
+	object_type_t owner;
 };
 
 
-bullet_list_t *initialize_bullet_list();
-void create_bullet(SDL_Renderer *render, game_state_t *);
+bullet_list_t *initialize_bullet_list(object_type_t owner);
+void create_bullet(SDL_Renderer *render, game_state_t* gs, bullet_list_t* bullet_list);
 void update_bullets(game_state_t *gs);
 #endif 
