@@ -14,6 +14,8 @@
 
 #define ENEMY_WIDTH  32
 #define ENEMY_HEIGHT 26
+#define ENEMY_BULLET_W 7
+#define ENEMY_BULLET_H 16
 #define SPACE_BETWEEN_ENEMYS_X 12
 #define SPACE_BETWEEN_ENEMYS_Y 24
 
@@ -60,7 +62,7 @@ struct enemy_grid
 
 
 void init_enemy_list(enemy_list_t *list);
-void create_enemy_grid(SDL_Renderer *render, game_state_t *gs);
+void create_enemy_grid(game_state_t *gs);
 void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_col);
 void update_enemys(game_state_t *gs);
 

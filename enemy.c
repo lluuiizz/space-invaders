@@ -8,10 +8,11 @@ void init_enemy_list( enemy_list_t *list){
 	list->head = NULL;
 }
 
-void create_enemy_grid(SDL_Renderer *render, game_state_t *gs)
+void create_enemy_grid(game_state_t *gs)
 {
 
-	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	SDL_Log("Começamos a criar a Matriz de Inimigo");
+	enemy_grid_t *enemy_grid = gs->enemy_grid;
 	enemy_grid->move_direction = MOVING_RIGHT;
 	enemy_grid->move_speed = 10;
 	enemy_grid->nenemys = 0;
@@ -20,7 +21,8 @@ void create_enemy_grid(SDL_Renderer *render, game_state_t *gs)
 	{
 		init_enemy_list(&(enemy_grid->list[i]));
 		for (int j = 0; j < ROWS_OF_ENEMYS; j++){
-			create_enemy(render, &(enemy_grid->list[i]), i);
+			SDL_Log("Criando o Inimigo %d da coluna %d\n", j+1, i);
+			create_enemy(gs->render, &(enemy_grid->list[i]), i);
 			enemy_grid->nenemys++;
 		}
 		assert(enemy_grid->list[i].head != NULL);
@@ -71,18 +73,18 @@ void set_animation(SDL_Renderer *render, enemy_obj_t *enemy, enemy_animations_t 
 			break;
 	}
 }
-void set_enemy_propertys(SDL_Renderer *render, enemy_obj_t *enemy, int wich_list)
+void set_enemy_propertys(SDL_Renderer *render, enemy_obj_t *enemy, int wich_col)
 {
-	printf("Criando inimigo na coluna %d\n", wich_list);
+	SDL_Log("Estamos setando as informações do Inimigo\n");
 
 	if (enemy->prox == NULL)
 	{
-		set_enemy_pos_x(enemy, wich_list);
+		set_enemy_pos_x(enemy, wich_col);
 		enemy->render_info.pos_y = 0;
 	}
 	else
 	{
-		set_enemy_pos_x(enemy, wich_list);
+		set_enemy_pos_x(enemy, wich_col);
 		enemy->render_info.pos_y = enemy->prox->render_info.pos_y + ENEMY_HEIGHT + SPACE_BETWEEN_ENEMYS_Y;
 	}
 
@@ -101,7 +103,7 @@ void set_enemy_propertys(SDL_Renderer *render, enemy_obj_t *enemy, int wich_list
 		animation_to_set++;
 	} while (animation_to_set != TOTAL_ENEMY_ANIMATIONS);
 }
-void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list)
+void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_col)
 {
 	enemy_obj_t *head = list->head;
 	enemy_obj_t *newer = (enemy_obj_t*) malloc(sizeof(enemy_obj_t));
@@ -109,7 +111,7 @@ void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_list)
 	newer->render_info.animation = (animation_t*) malloc(sizeof(animation_t) * TOTAL_ENEMY_ANIMATIONS);
 
 	newer->prox = head;
-	set_enemy_propertys(render, newer, wich_list);
+	set_enemy_propertys(render, newer, wich_col);
 	list->head = newer;
 
 	assert(list->head != NULL);
@@ -182,7 +184,7 @@ void update_animation (game_state_t *gs, enemy_obj_t *enemy) {
 }
 
 bool can_move_left(game_state_t *gs, enemy_obj_t *enemy){
-	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	enemy_grid_t *enemy_grid = gs->enemy_grid;
 	
 	float tmp_pos_x = enemy->render_info.pos_x;
 	tmp_pos_x -= enemy_grid->move_speed * gs->delta_time;
@@ -194,7 +196,7 @@ bool can_move_left(game_state_t *gs, enemy_obj_t *enemy){
 
 }
 bool can_move_right(game_state_t *gs, enemy_obj_t *enemy){
-	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	enemy_grid_t *enemy_grid = gs->enemy_grid;
 	
 	SDL_Log("Posicao X do inimigo: %f", enemy->render_info.pos_x);
 	float tmp_pos_x = enemy->render_info.pos_x;
@@ -209,7 +211,7 @@ bool can_move_right(game_state_t *gs, enemy_obj_t *enemy){
 }
 
 void move_enemy(game_state_t *gs, enemy_obj_t *enemy, bool will_move_in_y){
-	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	enemy_grid_t *enemy_grid = gs->enemy_grid;
 	movement_direction_t move_direction = enemy_grid->move_direction;
 
 	if (will_move_in_y){
@@ -257,7 +259,7 @@ int farthest_column_in_direction(movement_direction_t in_move_direction, enemy_g
 }
 void update_enemys(game_state_t *gs){
 
-	enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+	enemy_grid_t *enemy_grid = gs->enemy_grid;
 
 	if (enemy_grid->nenemys == 0)
 		return;

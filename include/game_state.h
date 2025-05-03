@@ -5,11 +5,8 @@
 
 typedef struct game_state 
 {
-	union 
-	{
-		player_t *player;
-		enemy_grid_t *enemy_grid;
-	};
+	player_t *player;
+	enemy_grid_t *enemy_grid;
 
 	SDL_Renderer* render;
 	float delta_time;

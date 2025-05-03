@@ -28,26 +28,29 @@ int main(void)
 	player_t player;
 	enemy_grid_t enemy_grid;
 
-	game_state_t gs[N_OBJECTS_TYPES];
-	gs[PLAYER].player = &player;
-	gs[ENEMY].enemy_grid = &enemy_grid;
-
+	game_state_t* gs = (game_state_t*) malloc(sizeof(game_state_t));
+	gs->player = &player;
+	gs->enemy_grid = &enemy_grid;
 	gs->render = render;
 
-	init_player_state(render, gs);
+	assert(gs != NULL);
+
+	init_player_state(gs);
+
+	SDL_Log("Inicializamos o Player\n");
 	player.bullets = initialize_bullet_list(PLAYER);
+	SDL_Log("Inicializamos As Balas do Player\n");
 	assert(player.bullets != NULL);
 	assert(player.bullets->head == NULL);
 
-	create_enemy_grid(render, gs);
+	create_enemy_grid(gs);
+	SDL_Log("Inicializamos a matriz de Inimigos\n");
 	enemy_grid.bullets = initialize_bullet_list(ENEMY);
 
 	assert(enemy_grid.bullets != NULL);
 	assert(enemy_grid.bullets->head == NULL);
 
-
-
-
+	SDL_Log("Conseguimos passar por toda a inicialização!\n");
 	Uint32 last_time = SDL_GetTicks();
 
 	while (running)
@@ -67,11 +70,12 @@ int main(void)
 			// Check if the Space button was released and then set flag attack to true
 			else if (event.type == SDL_KEYDOWN){
 				if(event.key.keysym.sym == ATTACK){
-					gs[PLAYER].player->attacking = true;
+					gs->player->attacking = true;
 				}
 			}
 		}
-		update_player(render ,gs);
+		SDL_Log("Vamos começar a atualizar os dados\n");
+		update_player(gs);
 		update_bullets(gs);
 		update_enemys (gs);
 		render_game_objects(render,  gs);
@@ -85,8 +89,8 @@ int main(void)
 	assert(enemy_grid.bullets->head == NULL && enemy_grid.bullets->tail == NULL);
 
 	free(player.bullets);
-	free(enemy_grid.bullets);
 	free(player.render_info);
+	free(enemy_grid.bullets);
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(render);
@@ -109,11 +113,11 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 	{
 
 		if (different_objects[each] == PLAYER){
-			render_player_current_state(render, gs);
+			render_player_current_state (gs);
 		}
 
 		else if (different_objects[each] == ENEMY){
-			enemy_grid_t *enemy_grid = gs[ENEMY].enemy_grid;
+			enemy_grid_t *enemy_grid = gs->enemy_grid;
 			for (int i = 0; i < COLS_OF_ENEMYS; i++){
 				enemy_list_t *list = &(enemy_grid->list[i]);
 				enemy_obj_t *aux = list->head;
@@ -134,8 +138,8 @@ void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
 		else if (different_objects[each] == BULLET)
 		{
 			SDL_Log("Here we send the BULLETS to render\n");
-			bullet_obj_t *player_aux = gs[PLAYER].player->bullets->head;
-			bullet_obj_t *enemy_aux = gs[ENEMY].enemy_grid->bullets->head;
+			bullet_obj_t *player_aux = gs->player->bullets->head;
+			bullet_obj_t *enemy_aux = gs->enemy_grid->bullets->head;
 
 			while (player_aux != NULL){
 				SDL_Log("Estamos tentando renderizar uma bala\n");

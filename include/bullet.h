@@ -6,11 +6,6 @@
 #include "SDL2/SDL_image.h"
 
 
-#define BULLET_MOVE_SPEED 400
-#define BULLET_W 6
-#define BULLET_H 16 
-
-
 typedef struct bullet_obj
 {
 	object_t render_info;
@@ -27,6 +22,7 @@ struct bullet_list
 
 	int nbullets;
 	float couldown;
+	int move_speed;
 
 	object_type_t owner;
 };

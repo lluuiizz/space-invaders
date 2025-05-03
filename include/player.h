@@ -14,17 +14,21 @@
 #define ATTACK		  SDLK_SPACE
 
 #define BULLET_PLAYER_COULDOWN 0.25
+#define PLAYER_BULLET_W 6
+#define PLAYER_BULLET_H 16
 
-void init_player_state(SDL_Renderer* render, game_state_t *);
-void handle_keyboard_input  (SDL_Renderer *render, game_state_t *);
-void update_player(SDL_Renderer* render, game_state_t *);
-void render_player_current_state(SDL_Renderer* render, game_state_t *);
+void init_player_state( game_state_t *);
+void handle_keyboard_input  ( game_state_t *);
+void update_player(game_state_t *);
+void render_player_current_state(game_state_t *);
 
 struct player 
 {
 	object_t *render_info;
 	bool attacking;
 	int move_speed;
+
+	bool alive;
 
 	bullet_list_t *bullets;
 };
