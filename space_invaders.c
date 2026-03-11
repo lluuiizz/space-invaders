@@ -14,18 +14,17 @@ void collision_debug_rect(SDL_Renderer *render, object_t *object){
 }
 void render_game_objects (game_state_t* gs)
 {
-	object_type_t different_objects[] = {PLAYER, ENEMY, BULLET};
-	int each = 0;
+	object_type_t wich_object = 0;
 	do
 	{
-		if (different_objects[each] == PLAYER)
+		if (wich_object == PLAYER)
 			render_player_current_state (gs);
-		else if (different_objects[each] == ENEMY)
+		else if (wich_object == ENEMY)
             render_enemy_current_state(gs);
-		else if (different_objects[each] == BULLET)
+		else if (wich_object == BULLET)
             render_bullets_current_state(gs);
-		each++;
-	} while (each != N_OBJECTS_TYPES);
+		wich_object++;
+	} while (wich_object != N_OBJECTS_TYPES);
 
 }
 
