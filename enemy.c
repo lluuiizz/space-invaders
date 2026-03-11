@@ -314,3 +314,23 @@ void update_enemys(game_state_t *gs){
 		}
 	}
 }
+
+void render_enemy_current_state(game_state_t *gs) {
+    enemy_grid_t *enemy_grid = gs->enemy_grid;
+    for (int i = 0; i < COLS_OF_ENEMYS; i++){
+        enemy_list_t *list = &(enemy_grid->list[i]);
+        enemy_obj_t *aux = list->head;
+        while (aux != NULL){
+            animation_t *animation = aux->render_info.animation;
+            animation_t animation_now = animation[aux->animation_playing];
+            SDL_Rect crop_sprite = {.x = animation_now.frame_w * animation_now.frame_now,
+                                    .y = 0,
+                                    .w = ENEMY_WIDTH,
+                                    .h =  ENEMY_HEIGHT};
+
+            SDL_RenderCopy(gs->render, animation_now.sprite_sheet, &crop_sprite, &(aux->render_info).box);
+            aux = aux->prox;
+        }
+    }
+
+}
