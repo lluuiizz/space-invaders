@@ -26,22 +26,10 @@ Em jogos, entidades como projéteis e inimigos são criadas e destruídas a todo
 O ambiente de desenvolvimento e build foi configurado visando as melhores práticas de C:
 
 * **Linguagem:** C
-* 
 **Bibliotecas Gráficas:** SDL2, SDL2_image, SDL2_ttf 
-
-
-* 
 **Compilador:** GCC com flags rigorosas (`-Werror`, `-Wall`, `-Wextra`, `-pedantic`) para garantir que nenhum *warning* de segurança ou uso indevido de memória passasse despercebido.
-
-
-* 
 **Build System:** `Makefile` customizado para automação e limpeza de dependências.
-
-
-* 
 **Ferramentas de Análise:** Valgrind, utilizado para rastrear e prevenir vazamentos de memória (*memory leaks*) na criação e destruição dos nós encadeados.
-
-
 
 ## 💻 Como Compilar e Executar
 
