@@ -31,4 +31,5 @@ struct bullet_list
 bullet_list_t *initialize_bullet_list(object_type_t owner);
 void create_bullet(SDL_Renderer *render, game_state_t* gs, bullet_list_t* bullet_list);
 void update_bullets(game_state_t *gs);
+void render_bullets_current_state(game_state_t *gs);
 #endif 
