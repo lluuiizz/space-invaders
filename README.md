@@ -26,10 +26,12 @@ Em jogos, entidades como projéteis e inimigos são criadas e destruídas a todo
 O ambiente de desenvolvimento e build foi configurado visando as melhores práticas de C:
 
 * **Linguagem:** C
-**Bibliotecas Gráficas:** SDL2, SDL2_image, SDL2_ttf 
-**Compilador:** GCC com flags rigorosas (`-Werror`, `-Wall`, `-Wextra`, `-pedantic`) para garantir que nenhum *warning* de segurança ou uso indevido de memória passasse despercebido.
-**Build System:** `Makefile` customizado para automação e limpeza de dependências.
-**Ferramentas de Análise:** Valgrind, utilizado para rastrear e prevenir vazamentos de memória (*memory leaks*) na criação e destruição dos nós encadeados.
+* **Bibliotecas Gráficas:** SDL2, SDL2_image, SDL2_ttf
+* **Compilador:** GCC com flags rigorosas (`-Werror`, `-Wall`, `-Wextra`, `-pedantic`) para garantir código seguro e limpo.
+* **Build System:** `Makefile` customizado para automação.
+* **Ferramentas de Análise:** Valgrind, utilizado para rastrear e prevenir vazamentos de memória (*memory leaks*).
+* **Documentação:** Doxygen + Graphviz para geração de documentação automática e diagramas estruturais.
+
 
 ## 💻 Como Compilar e Executar
 
@@ -48,8 +50,6 @@ sudo apt-get install build-essential libsdl2-dev libsdl2-image-dev libsdl2-ttf-d
 Na raiz do projeto, utilize os comandos providenciados no `Makefile`:
 
 1. Para compilar todos os arquivos fonte e gerar o executável `space_invaders`:
-
-
 ```bash
 make all
 
@@ -57,8 +57,6 @@ make all
 
 
 2. Para compilar e executar o jogo automaticamente:
-
-
 ```bash
 make run
 
@@ -66,19 +64,49 @@ make run
 
 
 3. Para rodar a análise de vazamento de memória com o Valgrind:
-
-
 ```bash
 make val
 
 ```
 
 
-4. Para limpar os arquivos objetos `.o` e os binários gerados pela compilação:
-
-
+4. Para limpar os arquivos objetos `.o` e os binários gerados:
 ```bash
 make clean
 
 ```
 
+## 📚 Como Gerar a Documentação
+
+O código-fonte deste projeto está totalmente documentado seguindo o padrão **Doxygen**. O arquivo de configuração (`Doxyfile`) já está preparado para gerar uma página HTML navegável que inclui **diagramas UML e gráficos de dependência** de todas as estruturas do jogo.
+
+### 1. Instalando os geradores
+
+Para gerar a documentação completa com os gráficos, você precisará do Doxygen e do Graphviz instalados:
+
+```bash
+sudo apt-get install doxygen graphviz
+
+```
+
+### 2. Gerando os arquivos
+
+Abra o terminal na raiz do projeto e execute o comando:
+
+```bash
+doxygen Doxyfile
+
+```
+
+*Isso lerá todos os arquivos `.c` e `.h` e criará uma pasta chamada `docs/` na raiz do projeto.*
+
+### 3. Visualizando
+
+Após a geração ser concluída, basta abrir o arquivo principal no seu navegador web preferido:
+
+```bash
+xdg-open docs/html/index.html
+
+```
+
+*(Ou navegue até a pasta `docs/html/` pelo seu gerenciador de arquivos e dê um duplo clique em `index.html`)*.
