@@ -1,3 +1,25 @@
+# Arquivos objetos gerados pelo compilador
 *.o
-*.txt
+*.obj
+
+# Binários executáveis
 space_invaders
+space_invaders.exe
+*.out
+
+# Saída do Valgrind/GDB
+vgcore.*
+core
+*.log
+
+# Diretórios criados pelo Doxygen
+docs/
+html/
+latex/
+
+# Dependências temporárias / Arquivos de IDE (VSCode, Clion, etc)
+.vscode/
+.idea/
+compile_commands.json
+*.swp
+*~
