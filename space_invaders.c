@@ -6,6 +6,29 @@
 #include <SDL2/SDL_render.h>
 #include <stdlib.h>
 
+void collision_debug_rect(SDL_Renderer *render, object_t *object){
+
+	SDL_Rect debug_rect  = {.x = object->pos_x, .y = object->pos_y, .w= object->box.w, .h = object->box.h};
+	SDL_SetRenderDrawColor(render, 255, 0, 0, 100);
+	SDL_RenderFillRect(render, &debug_rect);
+}
+void render_game_objects (game_state_t* gs)
+{
+	object_type_t different_objects[] = {PLAYER, ENEMY, BULLET};
+	int each = 0;
+	do
+	{
+		if (different_objects[each] == PLAYER)
+			render_player_current_state (gs);
+		else if (different_objects[each] == ENEMY)
+            render_enemy_current_state(gs);
+		else if (different_objects[each] == BULLET)
+            render_bullets_current_state(gs);
+		each++;
+	} while (each != N_OBJECTS_TYPES);
+
+}
+
 int main(void)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -78,7 +101,7 @@ int main(void)
 		update_player(gs);
 		update_bullets(gs);
 		update_enemys (gs);
-		render_game_objects(render,  gs);
+		render_game_objects(gs);
 
 		SDL_Delay(TICKS_PER_FRAME);
 		SDL_RenderPresent(render);
@@ -99,63 +122,3 @@ int main(void)
 }
 
 
-void collision_debug_rect(SDL_Renderer *render, object_t *object){
-
-	SDL_Rect debug_rect  = {.x = object->pos_x, .y = object->pos_y, .w= object->box.w, .h = object->box.h};
-	SDL_SetRenderDrawColor(render, 255, 0, 0, 100);
-	SDL_RenderFillRect(render, &debug_rect);
-}
-void render_game_objects (SDL_Renderer *render,  game_state_t* gs)
-{
-	object_type_t different_objects[] = {PLAYER, ENEMY, BULLET};
-	int each = 0;
-	do
-	{
-
-		if (different_objects[each] == PLAYER){
-			render_player_current_state (gs);
-		}
-
-		else if (different_objects[each] == ENEMY){
-			enemy_grid_t *enemy_grid = gs->enemy_grid;
-			for (int i = 0; i < COLS_OF_ENEMYS; i++){
-				enemy_list_t *list = &(enemy_grid->list[i]);
-				enemy_obj_t *aux = list->head;
-				while (aux != NULL){
-					animation_t *animation = aux->render_info.animation;
-					animation_t animation_now = animation[aux->animation_playing];
-					SDL_Rect crop_sprite = {.x = animation_now.frame_w * animation_now.frame_now,
-											.y = 0,
-											.w = ENEMY_WIDTH,
-											.h =  ENEMY_HEIGHT};
-
-					SDL_RenderCopy(render, animation_now.sprite_sheet, &crop_sprite, &(aux->render_info).box);
-					aux = aux->prox;
-				}
-			}
-		}
-
-		else if (different_objects[each] == BULLET)
-		{
-			SDL_Log("Here we send the BULLETS to render\n");
-			bullet_obj_t *player_aux = gs->player->bullets->head;
-			bullet_obj_t *enemy_aux = gs->enemy_grid->bullets->head;
-
-			while (player_aux != NULL){
-				SDL_Log("Estamos tentando renderizar uma bala\n");
-				SDL_Rect sprite_rect = {.x = 0, .y = 0, .w = 8, .h = 16};
-				SDL_RenderCopy(render, player_aux->render_info.sprite, &sprite_rect, &(player_aux->render_info).box);
-				player_aux = player_aux->prox;
-			}
-			while (enemy_aux != NULL){
-				SDL_Log("Estamos tentando renderizar uma bala\n");
-				SDL_Rect sprite_rect = {.x = 0, .y = 0, .w = 8, .h = 16};
-				SDL_RenderCopy(render, enemy_aux->render_info.sprite, &sprite_rect, &(enemy_aux->render_info).box);
-				enemy_aux = enemy_aux->prox;
-			}
-		}
-
-		each++;
-	} while (each != N_OBJECTS_TYPES);
-
-}
