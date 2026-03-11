@@ -65,6 +65,7 @@ void init_enemy_list(enemy_list_t *list);
 void create_enemy_grid(game_state_t *gs);
 void create_enemy(SDL_Renderer *render, enemy_list_t *list, int wich_col);
 void update_enemys(game_state_t *gs);
+void render_enemy_current_state(game_state_t *gs);
 
 
 #endif 
