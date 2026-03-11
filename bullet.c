@@ -249,3 +249,22 @@ void update_bullets(game_state_t *gs)
 		}
 	}
 }
+
+void render_bullets_current_state(game_state_t *gs) {
+    SDL_Log("Here we send the BULLETS to render\n");
+    bullet_obj_t *player_aux = gs->player->bullets->head;
+    bullet_obj_t *enemy_aux = gs->enemy_grid->bullets->head;
+
+    while (player_aux != NULL){
+        SDL_Log("Estamos tentando renderizar uma bala\n");
+        SDL_Rect sprite_rect = {.x = 0, .y = 0, .w = 8, .h = 16};
+        SDL_RenderCopy(gs->render, player_aux->render_info.sprite, &sprite_rect, &(player_aux->render_info).box);
+        player_aux = player_aux->prox;
+    }
+    while (enemy_aux != NULL){
+        SDL_Log("Estamos tentando renderizar uma bala\n");
+        SDL_Rect sprite_rect = {.x = 0, .y = 0, .w = 8, .h = 16};
+        SDL_RenderCopy(gs->render, enemy_aux->render_info.sprite, &sprite_rect, &(enemy_aux->render_info).box);
+        enemy_aux = enemy_aux->prox;
+    }
+}
