@@ -1,0 +1,38 @@
+# Informações do Projeto
+PROJECT_NAME           = "Space Invaders Clone"
+PROJECT_NUMBER         = 1.0
+PROJECT_BRIEF          = "Clone do Arcade em C com SDL2"
+OUTPUT_DIRECTORY       = docs
+
+# Configurações de Código (Otimizado para C)
+OPTIMIZE_OUTPUT_FOR_C  = YES
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+FILE_PATTERNS          = *.c *.h
+RECURSIVE              = YES
+
+# Aparência da Página (Painel Lateral Intuitivo)
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = YES
+HTML_DYNAMIC_MENUS     = YES
+
+# Desabilita o LaTeX para economizar tempo de compilação
+GENERATE_LATEX         = NO
+
+# GRÁFICOS E DEPENDÊNCIAS
+# (Requer o Graphviz/Dot instalado no sistema: sudo apt install graphviz)
+HAVE_DOT               = YES
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = YES
+UML_LOOK               = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+DIRECTORY_GRAPH        = YES
+DOT_IMAGE_FORMAT       = svg
+INTERACTIVE_SVG        = YES
